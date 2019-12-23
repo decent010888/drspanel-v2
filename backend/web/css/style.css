@@ -1,0 +1,182 @@
+body > .header .logo {
+    font-family: inherit;
+}
+body > .header .navbar .nav > li > a > .badge {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    font-size: 75%;
+}
+body .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .glyphicon,
+body .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .fa,
+body .navbar-nav > .notifications-menu > .dropdown-menu > li .menu > li > a > .ion {
+    background: none;
+    color: inherit;
+}
+body .user-panel > .info {
+    padding-left: 10px;
+}
+
+.img_div_left{
+    width: 100px;
+    height: 100px;
+    display: block;
+    float: left;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+.img_div_left img {
+    vertical-align: middle;
+    border-style: none;
+    max-width:100%;
+}
+
+.small-box {
+    border-radius: .25rem;
+    box-shadow: 0 0 1px rgba(0,0,0,.125),0 1px 3px rgba(0,0,0,.2);
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+}
+sub, sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+}
+.bg-success {
+    background-color: #28a745 !important;
+}
+.bg-success, .bg-success > a {
+    color: #fff !important;
+}
+.small-box > .inner {
+    padding: 10px;
+}
+.col-lg-3 .small-box h3, .col-md-3 .small-box h3, .col-xl-3 .small-box h3 {
+    font-size: 2.2rem;
+}
+sup {
+    top: -.5em;
+}
+.small-box p {
+    font-size: 1rem;
+}
+.small-box h3, .small-box p {
+    z-index: 5;
+}
+.small-box .icon {
+    color: rgba(0,0,0,.15);
+    z-index: 0;
+}
+.small-box .icon > i {
+    font-size: 90px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    transition: all .3s linear;
+}
+.small-box .icon > i.fa, .small-box .icon > i.fab, .small-box .icon > i.far, .small-box .icon > i.fas, .small-box .icon > i.glyphicon, .small-box .icon > i.ion {
+    font-size: 70px;
+    top: 20px;
+}
+.small-box > .small-box-footer {
+    background: rgba(0,0,0,.1);
+    color: rgba(255,255,255,.8);
+    display: block;
+    padding: 3px 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    z-index: 10;
+}
+.small-box p {
+    font-size: 20px;
+}
+.bg-info {
+    background-color: #17a2b8 !important;
+}
+.bg-warning {
+    background-color: #ffc107 !important;
+}
+.bg-info, .bg-info > a {
+    color: #fff !important;
+}
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+.card {
+    box-shadow: 0 0 1px rgba(0,0,0,.125),0 1px 3px rgba(0,0,0,.2);
+    margin-bottom: 1rem;
+}
+.d-flex {
+    display: -ms-flexbox !important;
+    display: flex !important;
+}
+.justify-content-between {
+    -ms-flex-pack: justify !important;
+    justify-content: space-between !important;
+}
+.card-title {
+    float: left;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+}
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+.flex-column {
+    -ms-flex-direction: column !important;
+    flex-direction: column !important;
+}
+.ml-auto, .mx-auto {
+    margin-left: auto !important;
+}
+.text-right {
+    text-align: right !important;
+}
+.text-bold, .text-bold.table td, .text-bold.table th {
+    font-weight: 700;
+}
+.text-lg {
+    font-size: 1.25rem !important;
+}
+.text-success {
+    color: #28a745 !important;
+}
+.text-muted {
+    color: #6c757d !important;
+}
+.calendar { border: 1px solid #ccc; padding: 20px;}
+
+/*# sourceMappingURL=style.map *//*# sourceMappingURL=style.map */
+
+.input-sm.select2-container--krajee .select2-selection--single, .input-group-sm .select2-container--krajee .select2-selection--single {
+    border-radius: 3px;
+    font-size: 12px;
+    height: 34px;
+    line-height: 1.5;
+    padding: 11px 22px 9px 10px;
+}
