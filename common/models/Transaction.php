@@ -26,6 +26,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class Transaction extends \yii\db\ActiveRecord {
 
+    public $fromdate;
+    public $todate;
     /**
      * @inheritdoc
      */

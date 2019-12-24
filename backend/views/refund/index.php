@@ -6,6 +6,7 @@ use common\grid\EnumColumn;
 use common\models\MetaValues;
 use common\models\UserAppointment;
 
+
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\MetaValuesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -16,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="box">
     <div class="box-body">
         <div class="meta-values-index">
+            <?php echo $this->render('_search', ['model' => $searchModel]); ?>
             <?=
             GridView::widget([
                 'dataProvider' => $dataProvider,
@@ -27,8 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => 'Appointment',
                         'value' => function($data) {
                             $appName = UserAppointment::findOne($data->appointment_id);
-                            return $appName['shift_name'] . ', ' . date('d-m-Y', strtotime($appName['date']));
-                        }
+                            return 'Shift : ' . $appName['shift_label'] . '<br> Shift Time : ' . $appName['shift_name'];
+                        },
+                        'format' => 'html'
                     ],
                     [
                         'attribute' => 'appointment_id',
@@ -42,8 +45,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'user_id',
                         'label' => 'Patient',
                         'value' => function($data) {
-                            $userName = common\models\UserProfile::find()->where(['user_id'=>$data->user_id])->one();
-                            return $userName['name'];
+                            $userName = UserAppointment::findOne($data->appointment_id);
+                            return $userName['user_name'];
                         }
                     ],
                     'originate_date',

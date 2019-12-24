@@ -44,7 +44,7 @@ $this->registerJs($js,\yii\web\VIEW::POS_END);
       </div>
 
         <div id="statistics-appointments">
-          <?php echo $this->render('/common/_appointment-token',['appointments'=>$appointments,'typeselected'=>$typeselected,'typeCount'=>$typeCount,'userType'=>'doctor'])?>
+          <?php echo $this->render('/common/_appointment-token',['appointments'=>$appointments,'typeselected'=>$typeselected,'typeCount'=>$typeCount,'userType'=>'doctor', 'doctor_id' => $doctor_id])?>
       </div>
   <?php } else{ ?>
                     <div class="col-md-12 text-center">Shifts not available.</div>

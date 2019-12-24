@@ -82,7 +82,7 @@ class PatientController extends \yii\web\Controller {
         if (Yii::$app->request->post()) {
             $post = Yii::$app->request->post();
             $heightFI = array();
-           
+
             $heightFI['feet'] = $post['UserProfile']['height'];
             $heightFI['inch'] = $post['UserProfile']['inch'];
             $address = $post['UserProfile']['address1'];
@@ -90,7 +90,7 @@ class PatientController extends \yii\web\Controller {
             $city_id = $post['UserProfile']['city_id'];
             $area = $post['UserProfile']['area'];
             $cityName = DrsPanel::getCityName($city_id);
-            
+
             if ($post['UserProfile'] || $post['User']) {
                 if ($address != '' && $area != '' && $cityName != '' && $state != '') {
                     $location = $address . ', ' . $area . ', ' . $cityName . ', ' . $state;
@@ -136,10 +136,10 @@ class PatientController extends \yii\web\Controller {
 
         $json = file_get_contents("https://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&key=AIzaSyD68G6UYDDxDthxDtQCjidVP5dgth3P-o0");
         $json = json_decode($json);
-        
+
         $lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
         $long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
-       
+
         return $lat . ',' . $long;
     }
 
@@ -856,7 +856,8 @@ class PatientController extends \yii\web\Controller {
 
     public function actionMyPayments() {
         $id = Yii::$app->user->id;
-        return $this->render('/patient/my-payments');
+        $userAppointment = UserAppointment::getPaymentHistory($id);
+        return $this->render('/patient/my-payments', ['userAppointment' => $userAppointment]);
     }
 
     public function actionLiveStatus($id) {

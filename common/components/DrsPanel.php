@@ -2758,7 +2758,7 @@ class DrsPanel {
                     $getShiftSlots[$s]['status'] = $shift->status;
                     $getShiftSlots[$s]['booking_closed'] = $shift->booking_closed;
 
-                    $address = UserAddress::find()->where(['id'=>$dateSchedule->address_id])->asArray()->one();
+                    $address = UserAddress::find()->where(['id'=>$dateSchedule->address_id])->one();
                     $getShiftSlots[$s]['consultation_fees'] = $dateSchedule->consultation_fees;
                     $getShiftSlots[$s]['consultation_fees_discount'] = $dateSchedule->consultation_fees_discount;
                     $getShiftSlots[$s]['fees'] = $dateSchedule->consultation_fees;
@@ -2767,7 +2767,7 @@ class DrsPanel {
                     $getShiftSlots[$s]['address_id'] = $dateSchedule->address_id;
                     $getShiftSlots[$s]['address_name'] = isset($address->name) ? $address->name : '';
                     $getShiftSlots[$s]['hospital_name'] = isset($address->name) ? $address->name : '';
-                    $getShiftSlots[$s]['address'] = DrsPanel::getAddressLine($address['id']);
+                    $getShiftSlots[$s]['address'] = DrsPanel::getAddressLine($address->id);
                     $getShiftSlots[$s]['phone'] = isset($address->phone) ? $address->phone : '';
                     $getShiftSlots[$s]['duration'] = $dateSchedule->appointment_time_duration;
                     $getShiftSlots[$s]['patient_limit'] = $dateSchedule->patient_limit;
@@ -6828,7 +6828,7 @@ class DrsPanel {
 
                 if (isset($refundResponce['body']['orderId']) && $refundResponce['body']['orderId'] != '') {
 
-                    $refundData = array("ORDERID" => $refundResponce['body']['orderId'], "MID" => $refundResponce['body']['mid'], "REFID" => $refundResponce['body']['refId'], "STATUS" => $refundResponce['body']['resultInfo']['resultStatus'], "RESULTMSG" => $refundResponce['body']['resultInfo']['resultMsg'], "REFUNDID" => $refundResponce['body']['refundId'], "TXNID" => $refundResponce['body']['txnId'], "REFUNDAMOUNT" => $refundResponce['body']['refundAmount']);
+                    $refundData = array("ORDERID" => $refundResponce['body']['orderId'], "MID" => $refundResponce['body']['mid'], "REFID" => isset($refundResponce['body']['refId']) ? $refundResponce['body']['refId'] : 0, "STATUS" => $refundResponce['body']['resultInfo']['resultStatus'], "RESULTMSG" => $refundResponce['body']['resultInfo']['resultMsg'], "REFUNDID" => $refundResponce['body']['refundId'], "TXNID" => $refundResponce['body']['txnId'], "REFUNDAMOUNT" => $refundResponce['body']['refundAmount']);
 
                     $transactionModel = Transaction::find()->where(['appointment_id' => $appointmentId, 'type' => 'refund'])->one();
                     $transactionModel->paytm_response = json_encode($refundData);
@@ -6882,7 +6882,7 @@ class DrsPanel {
                     $appointment->deleted_by = 'Doctor';
                 }
                 if ($appointment->save()) {
-                    $refunResponse = self::getRefundAmount($appointment->id);
+                    $refunResponse = self::getRefundAmount($appointment->id, $by);
                     $sendSMS = Notifications::appointmentSmsNotification($appointment->id, 'cancelled', strtolower($by));
                     $addLog = Logs::appointmentLog($appointment->id, 'Appointment cancelled by ' . $by);
                 }

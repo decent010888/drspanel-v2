@@ -11,8 +11,8 @@
                 }
                 else{
                     if($slot['status'] == 'booked' || $slot['status'] == 'blocked'){
-                        $token_class='emergency';
-                        $status='Booked';
+                        $token_class='booked';
+                        $status='<span style="color:#d88d0c">Booked</span>';
                         $class_click= 'get-slot-booked';
                     }
                     else{

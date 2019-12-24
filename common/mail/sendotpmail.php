@@ -24,7 +24,7 @@ $baseUrl = Url::to('@frontendUrl');
                     </tr>
                     <tr>
                         <td style="color: rgb(102, 102, 102);font-size: 16px;line-height: normal;">
-                            <?php echo $otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.' ?>
+                            <?php echo $otp ?> is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.
                         </td>
                     </tr>
                     <tr>

@@ -45,6 +45,7 @@ $js = "
         });
     });
     
+    
     ";
 $this->registerJs($js, \yii\web\VIEW::POS_END);
 // pr($appointments);die;
@@ -150,65 +151,75 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                         </div>
                                     </div>
                                     <div class="row appointment-bookbtn">
-                                        <?php if ($appointments['status'] == UserAppointment::STATUS_CANCELLED) { ?>
-                                            <div class="col-lg-3 col-sm-12">
-                                            <?php } else { ?>
-                                                <div class="col-lg-4 col-sm-12">
-                                                <?php } ?>    
-                                                <?php
-                                                if ($appointments['status'] == UserAppointment::STATUS_CANCELLED || $appointments['status'] == UserAppointment::STATUS_COMPLETED) {
-                                                    
-                                                } else {
-                                                    $doctor_link = $baseUrl . '/patient/live-status/' . $appointments['id'];
-                                                    ?>
-                                                    <div class="bookappoiment-btn">
-                                                        <input type="button" value="Live Status" class="bookinput" onclick="location.href = '<?php echo $doctor_link ?>'">
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
+
+
+                                        <?php
+                                        if ($appointments['status'] == UserAppointment::STATUS_CANCELLED || $appointments['status'] == UserAppointment::STATUS_COMPLETED) {
+                                            
+                                        } else {
+                                            $doctor_link = $baseUrl . '/patient/live-status/' . $appointments['id'];
+                                            ?>
                                             <div class="col-lg-4 col-sm-12">
-                                                <?php
-                                                if ($appointments['status'] == UserAppointment::STATUS_CANCELLED || $appointments['status'] == UserAppointment::STATUS_COMPLETED || $appointments['status'] == UserAppointment::STATUS_ACTIVE) {
-                                                    $slug = isset($appointment_doctorData['slug']) ? $appointment_doctorData['slug'] : '';
-                                                    $doctor_link = $baseUrl . '/doctor/' . $slug;
-                                                    ?>
-                                                    <div class="bookappoiment-btn">
-                                                        <input type="button" value="Rebook" class="bookinput green-btn" onclick="location.href = '<?php echo $doctor_link ?>'">
-                                                    </div>
-                                                <?php }
-                                                ?>
-                                            </div>
-                                            <?php
-                                            $timestamp = $appointments['appointment_time'] - 60 * 60 * 2; // appointment_time - 2 hours==  && $timestamp <= time()
-                                            if ($appointments['status'] == UserAppointment::STATUS_CANCELLED) {
-                                                ?>
-                                                <div class="col-lg-4 col-sm-12">
-                                                    <div class="bookappoiment-btn">
-                                                        <?php if ($getTransactionDetail['refund_by'] != '') { ?>
-                                                            <input type="button" value="Refund Status" class="bookinput green-btn refund_status" data-id="<?php echo $appointments['id'] ?>">
-                                                        <?php } ?>
-                                                    </div>
+                                                <div class="bookappoiment-btn">
+                                                    <input type="button" value="Live Status" class="bookinput" onclick="location.href = '<?php echo $doctor_link ?>'">
                                                 </div>
-                                            <?php } ?>
-                                            <div class="col-lg-4 col-sm-12">
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php if ($appointments['status'] == UserAppointment::STATUS_CANCELLED || $appointments['status'] == UserAppointment::STATUS_COMPLETED || $appointments['status'] == UserAppointment::STATUS_ACTIVE) { ?>
+                                            <div class = "col-lg-4 col-sm-12">
                                                 <?php
-                                                if ($appointments['status'] == UserAppointment::STATUS_CANCELLED || $appointments['status'] == UserAppointment::STATUS_COMPLETED || $appointments['status'] == UserAppointment::STATUS_ACTIVE) {
-                                                    
-                                                } else {
-                                                    ?>
-                                                    <div class="bookappoiment-btn">
-                                                        <input type="button" value="Cancel" class="bookinput cancel_appointment" data-id="<?php echo $appointments['id']; ?>">
-                                                    </div>
-                                                <?php } ?>
+                                                $slug = isset($appointment_doctorData['slug']) ? $appointment_doctorData['slug'] : '';
+                                                $doctor_link = $baseUrl . '/doctor/' . $slug;
+                                                ?>
+                                                <div class="bookappoiment-btn">
+                                                    <input type="button" value="Rebook" class="bookinput green-btn" onclick="location.href = '<?php echo $doctor_link ?>'">
+                                                </div>
+
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php
+                                        $timestamp = $appointments['appointment_time'] - 60 * 60 * 2; // appointment_time - 2 hours==  && $timestamp <= time()
+                                        if ($appointments['status'] == UserAppointment::STATUS_CANCELLED) {
+                                            ?>
+                                            <div class="col-lg-4 col-sm-12">
+                                                <div class="bookappoiment-btn">
+                                                    <?php if ($getTransactionDetail['refund_by'] != '') { ?>
+                                                        <input type="button" value="Refund Status" class="bookinput green-btn refund_status" data-id="<?php echo $appointments['id'] ?>">
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
+                                            <div class="col-lg-4 col-sm-12"></div>
+                                        <?php } ?>
+
+                                        <?php
+                                        if ($appointments['status'] == UserAppointment::STATUS_CANCELLED || $appointments['status'] == UserAppointment::STATUS_COMPLETED || $appointments['status'] == UserAppointment::STATUS_ACTIVE) {
+                                            
+                                        } else {
+                                            ?>
+                                            <div class="col-lg-4 col-sm-12">
+                                                <div class="bookappoiment-btn">
+                                                    <input type="button" value="Cancel" class="bookinput cancel_appointment" data-id="<?php echo $appointments['id']; ?>">
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+                                        <div class="col-lg-4 col-sm-12">
+                                            <div class="bookappoiment-btn">
+                                                <input type="button" value="Back" class="bookinput" onclick="location.href = '<?php echo $baseUrl . '/patient/appointments' ?>'">
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php echo $this->render('@frontend/views/layouts/rightside'); ?>
                 </div>
+                <?php echo $this->render('@frontend/views/layouts/rightside'); ?>
             </div>
         </div>
+    </div>
 </section>

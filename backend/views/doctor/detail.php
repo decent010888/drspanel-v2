@@ -243,8 +243,7 @@ $this->registerJs("
                     <div class="seprator_box">
                         <h4>Services:</h4>
 
-                        <?php $userProfile->services = explode(',', $userProfile->services);
-                        ?>
+                        <?php $userProfile->services = explode(', ', $userProfile->services); ?>
                         <?php
                         echo $form->field($userProfile, 'services')->widget(Select2::classname(), [
                             'data' => $services_list,

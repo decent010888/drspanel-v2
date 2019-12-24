@@ -2023,6 +2023,7 @@ h3.orange_text {
 
 .hospitals-detailspt .resp-tab-content {padding:0;}
 .token.emergency h4 {color:#a42127;}
+.token.booked h4 {color:#d88d0c;}
 .today-appoimentpart { width: 100%; display: inline-block; text-align: center;  }
 .calender_icon_main img { width: 30px;  margin-right: 18px;}
 .date-maintable table {width:100%; text-align:center;}

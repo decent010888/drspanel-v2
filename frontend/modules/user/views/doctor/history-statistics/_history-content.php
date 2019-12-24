@@ -1,9 +1,6 @@
 <?php
 $baseUrl= Yii::getAlias('@frontendUrl');
 ?>
-
-
-
 <div class="row">
     <div class="col-sm-12">
         <div class="search-boxicon">
@@ -12,10 +9,6 @@ $baseUrl= Yii::getAlias('@frontendUrl');
         </div>
     </div>
 </div>
-
-
-
-
 <div id="appointment_shift_slots">
     <?php
     echo $this->render('/doctor/history-statistics/_history_shift_slots',['appointments'=>$appointments,'current_shifts'=>$current_selected,'doctor'=>$doctor,'shifts'=>$shifts,'history_count'=>$history_count,'typeCount'=>$typeCount,'userType'=>'doctor','type'=>'history']);

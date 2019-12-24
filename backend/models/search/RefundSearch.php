@@ -21,8 +21,7 @@ class RefundSearch extends Transaction {
      */
     public function rules() {
         return [
-            [['id', 'status'], 'integer'],
-            [['txn_date','shift_name'], 'safe'],
+            [['txn_date'], 'safe'],
         ];
     }
 
@@ -39,30 +38,29 @@ class RefundSearch extends Transaction {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        
+        if(isset($params['delete']) && $params['delete'] == 'yes') {
+            
+        }
         $query = Transaction::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            
         ]);
-       
+
         $query->joinWith(['userAppointment']);
         $query->Where(['user_appointment.id' => $this->appointment_id]);
         $query->Where(['transaction.type' => 'refund']);
-        
+
+        $fromdate = date('Y-m-d', strtotime($params['fromdate']));
+
+        $todate = date('Y-m-d', strtotime($params['todate']));
+        $query->andFilterWhere(['between', 'txn_date', $fromdate, $todate]);
+
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'transaction.id' => $this->id,
-            'transaction.status' => $this->status
-        ]);
 
-        $query->andFilterWhere(['like', 'transaction.refund_by', trim($this->refund_by)])
-                ->andFilterWhere(['like', 'transaction.txn_date', trim($this->txn_date)]);
-        
         return $dataProvider;
     }
 

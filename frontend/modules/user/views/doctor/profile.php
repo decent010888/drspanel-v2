@@ -184,8 +184,10 @@ $this->registerJs("
                     $key=MetaValues::findOne(['value'=>$specialityies[0]]);
                     $treatments=MetaValues::find()->andWhere(['status'=>1,'key'=>9])->andWhere(['parent_key'=>isset($key->id)?$key->id:'0'])->all();
                     foreach ($treatments as $treatment) {
-                      $treatment_list[$treatment->value] = $treatment->label;
+                        
+                      $treatment_list[ucwords($treatment->value)] = ucwords($treatment->label);
                     }
+                    
                   }
                   ?>  
                   <?php echo  $form->field($userProfile, 'speciality')->widget(Select2::classname(), 

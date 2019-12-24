@@ -113,7 +113,7 @@ $this->registerJs($js,\yii\web\VIEW::POS_END);
     <?php
 
     if($shifts){
-        foreach ($shifts as $key => $shift) { ?>
+        foreach ($shifts as $key => $shift) {?>
             <li id="<?php echo 'shiftslot_'.$shift['schedule_id']; ?>" class="<?php echo ($shift['schedule_id'] == $current_shifts)?'active':''?>">
                 <a href="javascript:void(0)" shift-date="<?php echo isset($shift['date'])?$shift['date']:''; ?>" class="get-shift-token" data-shift="<?php echo $shift['schedule_id']; ?>" data-type="<?php echo $type; ?>" data-doctorid="<?php echo $doctor->id; ?>">
                     <?php echo $shift['shift_name']; ?>

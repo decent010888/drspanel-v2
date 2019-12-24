@@ -135,7 +135,7 @@ class UserProfile extends ActiveRecord {
         return $this->avatar_path ? Yii::getAlias($this->avatar_base_url . '/' . $this->avatar_path) : $default;
     }
 
-    public function upsert($post, $user_id, $groupid) {
+    public static function upsert($post, $user_id, $groupid) {
         $model = UserProfile::findOne($user_id);
 
         if (empty($model))

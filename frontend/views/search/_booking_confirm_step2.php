@@ -8,7 +8,7 @@ $baseUrl= Yii::getAlias('@frontendUrl');
 
 $getAppointment="'".$baseUrl."/search/get-appointment-detail'";
 $js="  
-    $(document).on('click','.booking_appointment_btn', function(event){    
+    $(document).on('click','.booking_appointment_btn', function(event){   
         event.preventDefault();  
         var a = $(this);
         if(a.hasClass('disabled')) {

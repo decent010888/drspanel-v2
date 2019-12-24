@@ -97,7 +97,7 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                             <div class="pace-part main-tow">
                                 <h3 class="addnew">Edit Profilesss <?php echo \yii\helpers\Url::to('@frontendUrl'); ?></h3>
 
-<?php $form = ActiveForm::begin(['id' => 'patient-profile-form', 'options' => ['enctype' => 'multipart/form-data']]); ?>
+                                <?php $form = ActiveForm::begin(['id' => 'patient-profile-form', 'options' => ['enctype' => 'multipart/form-data']]); ?>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="user_profile_img">
@@ -122,11 +122,11 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-<?php echo $form->field($userProfile, 'name')->textInput(['class' => ''])->label(false); ?>
+                                        <?php echo $form->field($userProfile, 'name')->textInput(['class' => ''])->label(false); ?>
                                     </div>
 
                                     <div class="col-md-6">
-<?php echo $form->field($userModel, 'email', ['template' => '{input}<a href="javascript:void(0)" class="profile_edit_input" id="email_' . $userProfile->user_id . '" data-userType="patient" data-keyid="' . $userProfile->user_id . '"><i class="fa fa-edit" aria-hidden="true" data-id="88"></i></a>{error}'])->textInput(['class' => 'input_field input_email_edit', 'placeholder' => 'Email', 'readOnly' => true])->label(false); ?>
+                                        <?php echo $form->field($userModel, 'email', ['template' => '{input}<a href="javascript:void(0)" class="profile_edit_input" id="email_' . $userProfile->user_id . '" data-userType="patient" data-keyid="' . $userProfile->user_id . '"><i class="fa fa-edit" aria-hidden="true" data-id="88"></i></a>{error}'])->textInput(['class' => 'input_field input_email_edit', 'placeholder' => 'Email', 'readOnly' => true])->label(false); ?>
                                     </div>
 
                                     <div class="col-md-6">
@@ -174,11 +174,11 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                         ?>
                                     </div>
                                     <div class="col-md-6">
-<?= $form->field($userProfile, 'address1')->textInput(['placeholder' => 'Address'])->label(false) ?>
+                                        <?= $form->field($userProfile, 'address1')->textInput(['placeholder' => 'Address'])->label(false) ?>
                                     </div>
 
                                     <div class="col-md-6">
-<?php echo $form->field($userModel, 'phone', ['template' => '{input}<a href="javascript:void(0)" class="profile_edit_input" id="phone_' . $userProfile->user_id . '" data-userType="patient" data-keyid="' . $userProfile->user_id . '"><i class="fa fa-edit" aria-hidden="true" data-id="88"></i></a>{error}'])->textInput(['class' => 'input_field input_phone_edit', 'placeholder' => 'Phone', 'readOnly' => true])->label(false); ?>
+                                        <?php echo $form->field($userModel, 'phone', ['template' => '{input}<a href="javascript:void(0)" class="profile_edit_input" id="phone_' . $userProfile->user_id . '" data-userType="patient" data-keyid="' . $userProfile->user_id . '"><i class="fa fa-edit" aria-hidden="true" data-id="88"></i></a>{error}'])->textInput(['class' => 'input_field input_phone_edit', 'placeholder' => 'Phone', 'readOnly' => true])->label(false); ?>
 
                                     </div>
 
@@ -225,10 +225,10 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                     </div>
 
                                     <div class="col-md-6 hide">
-<?php echo $form->field($userProfile, 'marital')->dropDownList(DrsPanel::getMaritalStatus(), ['class' => 'selectpicker', 'prompt' => 'marital', 'placeholder' => 'Marital'])->label(false); ?>
+                                        <?php echo $form->field($userProfile, 'marital')->dropDownList(DrsPanel::getMaritalStatus(), ['class' => 'selectpicker', 'prompt' => 'marital', 'placeholder' => 'Marital'])->label(false); ?>
                                     </div>
                                     <div class="col-md-6 hide">
-<?php echo $form->field($userProfile, 'weight')->textInput(['class' => '', 'prompt' => 'Weight', 'placeholder' => 'Weight'])->label(false); ?>
+                                        <?php echo $form->field($userProfile, 'weight')->textInput(['class' => '', 'prompt' => 'Weight', 'placeholder' => 'Weight'])->label(false); ?>
                                     </div>
 
                                     <div class="col-md-6 hide">
@@ -239,22 +239,22 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                         ?>
                                     </div>
                                     <div class="col-md-6 hide">
-<?php echo $form->field($userProfile, 'height')->dropDownList(DrsPanel::getPatientHeight(), ['class' => ' selectpicker', 'prompt' => 'Height in Feet', 'placeholder' => 'Height In Feet'])->label(false); ?>
+                                        <?php echo $form->field($userProfile, 'height')->dropDownList(DrsPanel::getPatientHeight(), ['class' => ' selectpicker', 'prompt' => 'Height in Feet', 'placeholder' => 'Height In Feet'])->label(false); ?>
                                     </div>
                                     <div class="col-md-6 hide">
-<?php echo $form->field($userProfile, 'inch')->dropDownList(DrsPanel::getInch(), ['class' => 'selectpicker', 'prompt' => 'Height in Inch', 'placeholder' => 'Height In Inch'])->label(false); ?>
+                                        <?php echo $form->field($userProfile, 'inch')->dropDownList(DrsPanel::getInch(), ['class' => 'selectpicker', 'prompt' => 'Height in Inch', 'placeholder' => 'Height In Inch'])->label(false); ?>
                                     </div>
                                     <div class="col-sm-12 text-center">
-<?php echo Html::submitButton(Yii::t('backend', 'Profile Update'), ['class' => 'submit_btn btn btn-primary', 'name' => 'signup-button']) ?>
+                                        <?php echo Html::submitButton(Yii::t('backend', 'Profile Update'), ['class' => 'submit_btn btn btn-primary', 'name' => 'signup-button']) ?>
                                     </div>
                                 </div>
-<?php ActiveForm::end(); ?>
+                                <?php ActiveForm::end(); ?>
 
                             </div>
                         </div>
                     </div>
                 </div>
-<?php echo $this->render('@frontend/views/layouts/rightside'); ?>
+                <?php echo $this->render('@frontend/views/layouts/rightside'); ?>
             </div>
         </div>
     </div>

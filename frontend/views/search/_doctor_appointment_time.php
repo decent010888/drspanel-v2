@@ -52,7 +52,7 @@ $this->registerJs($js,\yii\web\VIEW::POS_END);
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-9 mx-auto">
-                    <div class="refresh_notice">Note: Please do not reload or refresh the page.</div>
+<!--                    <div class="refresh_notice">Note: Please do not reload or refresh the page.</div>-->
                     <div class="youare-text"> You are Booking an appointment with </div>
                     <div class="hospitals-detailspt">
 
