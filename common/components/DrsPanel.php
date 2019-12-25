@@ -299,6 +299,21 @@ class DrsPanel {
                 $checkUser->otp = $otp;
                 $checkUser->mobile_verified = 0;
                 if ($checkUser->save()) {
+                    $userDetail = UserProfile::find()->where(['user_id' =>$checkUser->id ])->one();
+                    $from = 'support@drspanel.in';
+                    $to_email = $checkUser->email;
+                    $subject = 'Email OTP for mobile verification';
+                    $message = '<html><body>';
+                    $message .= '<h1>Hi ' . $userDetail['name'] . '!</h1>';
+                    $message .= '<p style="font-size:18px;">Your OTP is <strong>' . $otp . '</strong>. Please use this OTP for verify your mobile number.</p>';
+                    $message .= '</body></html>';
+                    $headers = 'MIME-Version: 1.0' . "\r\n";
+                    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                    $headers .= 'From: Drspanel <support@drspanel.in>'."\r\n" .
+                            'Reply-To: Drspanel <support@drspanel.in>'."\r\n" .
+                            'X-Mailer: PHP/' . phpversion();
+                    mail($to_email, $subject, $message, $headers);
+
 //                    $message = Yii::$app->mailer->compose('@common/mail/newuser', [
 //                                'name' => $checkUser->name,
 //                                'sendtouser' => $checkUser->email,
@@ -378,7 +393,7 @@ class DrsPanel {
                     $checkUser->device_id = $device_id;
                 if ($checkUser->save()) {
                     $profile = UserProfile::findOne(['user_id' => $checkUser->id]);
-                    $data_array = DrsPanel::profiledetails($checkUser, $profile, $userType);
+                    $data_array = DrsPanel::profiledetails($checkUser, $profile, $userType, $checkUser->id);
                     $response['userType'] = $newuser;
                     $response['type'] = 'success';
                     $response['data'] = $data_array;
@@ -2758,7 +2773,7 @@ class DrsPanel {
                     $getShiftSlots[$s]['status'] = $shift->status;
                     $getShiftSlots[$s]['booking_closed'] = $shift->booking_closed;
 
-                    $address = UserAddress::find()->where(['id'=>$dateSchedule->address_id])->one();
+                    $address = UserAddress::find()->where(['id' => $dateSchedule->address_id])->one();
                     $getShiftSlots[$s]['consultation_fees'] = $dateSchedule->consultation_fees;
                     $getShiftSlots[$s]['consultation_fees_discount'] = $dateSchedule->consultation_fees_discount;
                     $getShiftSlots[$s]['fees'] = $dateSchedule->consultation_fees;
@@ -4733,7 +4748,7 @@ class DrsPanel {
         }
         return $newshift;
     }
-    
+
     public static function getShiftListByAddress2($doctor_id, $address_id) {
         $getShiftSlots = array();
         $checkaddress_time = array();

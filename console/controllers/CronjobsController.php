@@ -88,7 +88,7 @@ class CronjobsController extends Controller {
         echo 'success';
     }
 
-    public function actionDoctorSponserEnd() {
+    public function actionDoctorSponserend() {
         $time = time();
         $reminders = \common\models\UserPlanDetail::find()->where(['status' => array('pending')])->andWhere('to_date < "' . date('Y-m-d') . '"')->all();
         foreach ($reminders as $reminder) {

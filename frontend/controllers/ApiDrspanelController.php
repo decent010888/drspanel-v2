@@ -752,7 +752,7 @@ class ApiDrspanelController extends ActiveController {
                                     $user->mobile_verified = 1;
                                     $user->save();
                                     $profile = UserProfile::findOne(['user_id' => $user->id]);
-                                    $data_array = DrsPanel::profiledetails($user, $profile, $user->groupid);
+                                    $data_array = DrsPanel::profiledetails($user, $profile, $user->groupid, $user->id);
                                     $response["status"] = 1;
                                     $response["error"] = false;
                                     $response['data'] = $data_array;
@@ -1124,7 +1124,7 @@ class ApiDrspanelController extends ActiveController {
             $user = User::findOne(['id' => $params['user_id']]);
             if (!empty($user)) {
                 $profile = UserProfile::findOne(['user_id' => $user->id]);
-                $data_array = DrsPanel::profiledetails($user, $profile, $user->groupid);
+                $data_array = DrsPanel::profiledetails($user, $profile, $user->groupid, $params['user_id']);
                 $response["status"] = 1;
                 $response["error"] = false;
                 $response['profile'] = $data_array;

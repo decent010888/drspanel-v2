@@ -181,6 +181,8 @@ class SearchController extends Controller {
             $groupid = $profile->groupid;
             $user = User::find()->where(['id' => $profile->user_id, 'admin_status' => [User::STATUS_ADMIN_LIVE_APPROVED, User::STATUS_ADMIN_APPROVED]])->one();
             if (!empty($user)) {
+                $date = date('Y-m-d');
+                DrsPanel::getBookingShifts($profile->user_id, $date, $profile->user_id);
                 return $this->render('details', [
                             'profile' => $profile, 'user' => $user, 'groupid' => $groupid,
                             'loginid' => $loginID]);

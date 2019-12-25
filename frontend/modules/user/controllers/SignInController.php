@@ -119,7 +119,20 @@ class SignInController extends \yii\web\Controller {
                 if ($user->save()) {
                     $message = $otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.';
                     //$sendSms = Notifications::send_sms($message, $user->phone, 'No', $user->countrycode, 1);
-
+                    $userDetail = \common\models\UserProfile::find()->where(['user_id' =>$user->id ])->one();
+                    $from = 'support@drspanel.in';
+                    $to_email = $user['email'];
+                    $subject = 'Email OTP for mobile verification';
+                    $message = '<html><body>';
+                    $message .= '<h1>Hi '.$userDetail['name'].'!</h1>';
+                    $message .= '<p style="font-size:18px;">Your OTP is <strong>'.$user->otp.'</strong>. Please use this OTP for verify your mobile number.</p>';
+                    $message .= '</body></html>';
+                    $headers  = 'MIME-Version: 1.0' . "\r\n";
+                    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                    $headers .= 'From: '.$from. "\r\n" .
+                                'Reply-To: '.$from."\r\n" .
+                                'X-Mailer: PHP/' . phpversion();
+                    mail($to_email,$subject,$message,$headers);
                     $data = $this->renderAjax('otp-verify', ['user' => $model->getUser()]);
                     $result = ['status' => true, 'error' => false, 'data' => $data];
                 } else {
@@ -155,15 +168,19 @@ class SignInController extends \yii\web\Controller {
             $model->username = $signup['email'];
             $user = $model->signup(Yii::$app->request->post());
             if (!$model->getErrors()) {
-                $message = Yii::$app->mailer->compose('@common/mail/newuser', [
-                            'name' => $signup['name'],
-                            'sendtouser' => $signup['email'],
-                            'otp' => $user->otp
-                        ])
-                        ->setFrom(['contact@drspanel.in' => 'Drspanel'])
-                        ->setTo($signup['email'])
-                        ->setSubject('Email OTP for mobile verification');
-                $message->send();
+                $from = 'support@drspanel.in';
+                $to_email = $signup['email'];
+                $subject = 'Email OTP for mobile verification';
+                $message = '<html><body>';
+                $message .= '<h1>Hi ' . $signup['name'] . '!</h1>';
+                $message .= '<p style="font-size:18px;">Your OTP is <strong>' . $user->otp . '</strong>. Please use this OTP for verify your mobile number.</p>';
+                $message .= '</body></html>';
+                $headers = 'MIME-Version: 1.0' . "\r\n";
+                $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                $headers .= 'From: Drspanel <support@drspanel.in>'. "\r\n" .
+                        'Reply-To: Drspanel <support@drspanel.in>'. "\r\n" .
+                        'X-Mailer: PHP/' . phpversion();
+                mail($to_email, $subject, $message, $headers);
                 $message = $user->otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.';
                 $sendSms = Notifications::send_sms($message, $user->phone, 'No', $user->countrycode, 1);
 
@@ -201,7 +218,7 @@ class SignInController extends \yii\web\Controller {
             $model->load(Yii::$app->request->post());
             if ($model->getUser()) {
                 if ($model->login()) {
-                    
+
                     $groupid = Yii::$app->user->identity->userProfile->groupid;
                     if ($groupid == Groups::GROUP_DOCTOR) {
                         if (Yii::$app->user->identity->admin_status == User::STATUS_ADMIN_LIVE_APPROVED || Yii::$app->user->identity->admin_status == User::STATUS_ADMIN_APPROVED) {

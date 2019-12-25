@@ -16,7 +16,7 @@ class MailSend {
             'subject' => 'Verify your email',
             'view' => 'sendotpmail',
             'to' => $userD['email'],
-            'from' => ['contact@drspanel.in' => 'Drspanel'],
+            'from' => ['support@drspanel.in' => 'Drspanel'],
             'params' => [
                 'otp' => $otp,
                 'username' => $userDetail['name'],

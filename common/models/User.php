@@ -305,7 +305,7 @@ class User extends ActiveRecord implements IdentityInterface
             ->one();
     }
 
-    public function ajaxUnique($post,$id=NULL){
+    public static function ajaxUnique($post,$id=NULL){
 
         $phone=User::find()
             ->andWhere(['phone'=> $post['phone']])
