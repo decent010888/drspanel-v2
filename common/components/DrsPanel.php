@@ -517,7 +517,7 @@ class DrsPanel {
 
             $rating = DrsPanel::getRatingStatus($profile->user_id);
             $data_array['rating'] = $rating['rating'];
-            DrsPanel::getBookingShifts($profile->user_id, $date, $current_login);
+            //DrsPanel::getBookingShifts($profile->user_id, $date, $current_login);
             $data_array['address'] = DrsPanel::getBookingAddressShifts($profile->user_id, date('Y-m-d'));
             $data_array['address_show'] = DrsPanel::getAddressShow($profile->address_id);
         } elseif ($profile->groupid == Groups::GROUP_HOSPITAL) {
@@ -557,6 +557,7 @@ class DrsPanel {
             $data_array['created_by'] = $profile->created_by;
             $data_array['doctor_id'] = $user->parent_id;
         }
+        DrsPanel::getBookingShifts($profile->user_id, $date, $current_login);
         $data_array['service_charge'] = 0; //DrsPanel::getMetaData('service_charge');
         $data_array['profile_image'] = DrsPanel::getUserAvator($profile->user_id);
         $data_array['groupid'] = $profile->groupid;

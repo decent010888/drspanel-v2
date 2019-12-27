@@ -1330,6 +1330,7 @@ class SearchController extends Controller {
                 Yii::$app->session->setFlash('error', "'" . $callback["RESPMSG"] . "'");
                 return $this->redirect(['/patient/appointments']);
             } else {
+                //\common\components\Notifications::bookingNotification($notifyData);
                 Yii::$app->session->setFlash('success', "'Appointment booked successfully!'");
                 return $this->redirect(['/patient/appointment-details/' . $callback['appointment_id']]);
             }

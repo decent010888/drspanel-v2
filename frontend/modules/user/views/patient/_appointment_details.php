@@ -190,8 +190,6 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                                     <?php } ?>
                                                 </div>
                                             </div>
-                                        <?php } else { ?>
-                                            <div class="col-lg-4 col-sm-12"></div>
                                         <?php } ?>
 
                                         <?php

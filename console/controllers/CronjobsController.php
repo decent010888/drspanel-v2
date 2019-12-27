@@ -88,11 +88,41 @@ class CronjobsController extends Controller {
         echo 'success';
     }
 
+    /* At mid night  0 0 * * *     */
     public function actionDoctorSponserend() {
         $time = time();
         $reminders = \common\models\UserPlanDetail::find()->where(['status' => array('pending')])->andWhere('to_date < "' . date('Y-m-d') . '"')->all();
         foreach ($reminders as $reminder) {
-            User::updateAll(['user_plan' => 'other'], ['doctor_id' => $reminder->user_id]);
+            User::updateAll(['user_plan' => 'other'], ['id' => $reminder->user_id]);
+        }
+        echo 'success';
+    }
+
+    /*  Every minutes */
+    public function actionNotifyBeforeTwoHour() {
+        $setNotify = UserAppointment::find()->where('appointment_time > ' . time() . ' ')->andWhere(['is_deleted' => 0, 'status' => 'pending'])->all();
+        if ($setNotify) {
+            foreach ($setNotify as $notifyData) {
+                //Convert to date
+                $datestr = date('Y-m-d H:i:s', $notifyData['start_time']);
+                $time = new \DateTime($datestr);
+                $diff = $time->diff(new \DateTime());
+                $minutes = ($diff->days * 24 * 60) +
+                        ($diff->h * 60) + $diff->i;
+                if ($minutes == 120) {
+                    $sendReminder = Notifications::before2hNotification($notifyData);
+                }
+            }
+        }
+        echo 'success';
+    }
+   /*   0 7 * * *    */
+    public function actionNotifyAtseven() {
+        $setNotify = UserAppointment::find()->where('appointment_time > ' . time() . ' ')->andWhere(['is_deleted' => 0, 'status' => 'pending'])->all();
+        if ($setNotify) {
+            foreach ($setNotify as $notifyData) {
+                $sendReminder = Notifications::before2hNotification($notifyData);
+            }
         }
         echo 'success';
     }

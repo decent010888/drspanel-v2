@@ -1931,7 +1931,14 @@ a.clander_icon {width: 33px;display: inline-block;margin-left: 7px;cursor:pointe
     float: right;
     color:#a42227;
 }
-
+.pace-part.main-tow.patient_appointment_main h4 a {
+    float: none;
+    color:#a42227;
+}
+.next_appointment span {
+    float: right;
+    color:#a42227;
+}
 .time_black_row {
     background-color: #454545;
     padding: 10px 18px;
