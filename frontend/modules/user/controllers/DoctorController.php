@@ -104,7 +104,7 @@ class DoctorController extends \yii\web\Controller {
             if (isset($post['UserProfile']['degree'])) {
                 $udegrees = $post['UserProfile']['degree'];
                 $userProfile->speciality = $post['UserProfile']['speciality'];
-                
+
                 $treatment = $post['UserProfile']['treatment'];
                 if (!empty($udegrees)) {
                     $other_degree = false;
@@ -132,10 +132,10 @@ class DoctorController extends \yii\web\Controller {
                 $userModel->admin_status = User::STATUS_ADMIN_REQUESTED;
             }
             if ($userModel->save() && $userProfile->save()) {
-                foreach ($udegrees as $degressData){
+                foreach ($udegrees as $degressData) {
                     $degreeModel = new MetaValues();
-                    $checkValue  = $degreeModel->find()->where('UPPER(label) = "'. strtoupper($degressData).'" ')->count();
-                    if($checkValue == 0){
+                    $checkValue = $degreeModel->find()->where('UPPER(label) = "' . strtoupper($degressData) . '" ')->count();
+                    if ($checkValue == 0) {
                         $degreeModel->key = 2;
                         $degreeModel->label = $degressData;
                         $degreeModel->value = $degressData;
@@ -227,8 +227,10 @@ class DoctorController extends \yii\web\Controller {
                         $model->save();
                         $userDetail = UserProfile::find()->where(['user_id' => $user_id])->one();
                         $userD = UserVerification::find()->where(['user_id' => $user_id])->one();
-                       
+                        $userPhone = User::find()->andWhere(['id' => $user_id])->one();
                         \common\components\MailSend::sendOtpMail($userDetail, $userD, $otp);
+                        $message = $otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.';
+                        $sendSms = Notifications::send_sms($message, $userPhone['phone'], 'No', $userPhone['countrycode'], 1);
                         //$model->otp = '';
 
                         echo $this->renderAjax('/common/_verify_otp_popup', ['type' => $post['type'], 'user' => $user, 'model' => $model]);
@@ -291,14 +293,14 @@ class DoctorController extends \yii\web\Controller {
                     $metakey_speciality = MetaKeys::findOne(['key' => 'speciality']);
                     $getSpecilaity = MetaValues::find()->where(['key' => $metakey_speciality->id, 'value' => $Userspecialities])->one();
                     if (!empty($Usertreatments)) {
-                        foreach($Usertreatments as $UsertreatmentsData){
+                        foreach ($Usertreatments as $UsertreatmentsData) {
                             $UsertreatArraay[] = ucwords($UsertreatmentsData);
                         }
                         $Usertreatmentss = implode(',', $UsertreatArraay);
-                        
+
                         $post['UserProfile']['treatment'] = $Usertreatmentss;
                         foreach ($Usertreatments as $keyt => $valuet) {
-                            $treatmentModel = MetaValues::find()->where(['key' => 9, 'parent_key' => $getSpecilaity->id])->andWhere('UPPER(value) = "'. strtoupper($valuet).'" ')->one();
+                            $treatmentModel = MetaValues::find()->where(['key' => 9, 'parent_key' => $getSpecilaity->id])->andWhere('UPPER(value) = "' . strtoupper($valuet) . '" ')->one();
                             if (empty($treatmentModel)) {
                                 $treatmentModel = new MetaValues();
                                 if (!empty($getSpecilaity)) {
@@ -329,7 +331,7 @@ class DoctorController extends \yii\web\Controller {
                     $post['UserProfile']['services'] = implode(', ', $userServices);
                 }
                 foreach ($userServices as $key => $value) {
-                    $servicesModel = MetaValues::find()->where(['key' => 11])->andWhere('UPPER(value) = "'. strtoupper($value).'" ')->one();
+                    $servicesModel = MetaValues::find()->where(['key' => 11])->andWhere('UPPER(value) = "' . strtoupper($value) . '" ')->one();
                     if (empty($servicesModel)) {
                         $servicesModel = new MetaValues();
                         $servicesModel->key = 11;
@@ -2267,7 +2269,7 @@ class DoctorController extends \yii\web\Controller {
             $appointments = $getAppointments['bookings'];
             $typeCount = $getAppointments['type'];
         }
-        return $this->render('/doctor/history-statistics/user-statistics-data', ['typeCount' => $typeCount, 'typeselected' => $typeselected, 'appointments' => $appointments, 'shifts' => $shiftAll, 'defaultCurrrentDay' => strtotime($date), 'doctor' => $doctor,'doctor_id'=>$user_id, 'current_selected' => $current_selected]);
+        return $this->render('/doctor/history-statistics/user-statistics-data', ['typeCount' => $typeCount, 'typeselected' => $typeselected, 'appointments' => $appointments, 'shifts' => $shiftAll, 'defaultCurrrentDay' => strtotime($date), 'doctor' => $doctor, 'doctor_id' => $user_id, 'current_selected' => $current_selected]);
     }
 
     public function actionAjaxUserStatisticsData() {
@@ -2292,7 +2294,7 @@ class DoctorController extends \yii\web\Controller {
                 $appointments = $getAppointments['bookings'];
                 $typeCount = $getAppointments['type'];
             }
-            return $this->renderAjax('/doctor/history-statistics/_user-statistics-data', ['typeCount' => $typeCount, 'typeselected' => $typeselected, 'appointments' => $appointments, 'shifts' => $shiftAll, 'date' => strtotime($date), 'doctor' => $doctor, 'current_shifts' => $current_selected,'doctor_id'=>$user_id]);
+            return $this->renderAjax('/doctor/history-statistics/_user-statistics-data', ['typeCount' => $typeCount, 'typeselected' => $typeselected, 'appointments' => $appointments, 'shifts' => $shiftAll, 'date' => strtotime($date), 'doctor' => $doctor, 'current_shifts' => $current_selected, 'doctor_id' => $user_id]);
         }
     }
 
@@ -2317,7 +2319,7 @@ class DoctorController extends \yii\web\Controller {
                 $typeCount = $getAppointments['type'];
             }
             $result['status'] = true;
-            $result['appointments'] = $this->renderAjax('/common/_appointment-token', ['appointments' => $appointments, 'typeselected' => $typeselected, 'typeCount' => $typeCount, 'doctor' => $doctor, 'userType' => 'doctor','doctor_id'=>$user_id]);
+            $result['appointments'] = $this->renderAjax('/common/_appointment-token', ['appointments' => $appointments, 'typeselected' => $typeselected, 'typeCount' => $typeCount, 'doctor' => $doctor, 'userType' => 'doctor', 'doctor_id' => $user_id]);
             $result['typeCount'] = $typeCount;
             $result['typeselected'] = $typeselected;
         }

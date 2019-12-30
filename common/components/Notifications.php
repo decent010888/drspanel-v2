@@ -233,7 +233,6 @@ class Notifications {
             $notification_data = ['type' => 'appointment', 'message' => $notify_message, 'user_id' => $user->id, 'appointment_id' => $appdata->id];
             Notifications::createNotification($user, $token, $type = 'appointment', 'DrsPanel Appointment Schedule', $notify_message, $notification_id, $user->device_type, $notification_data);
         }
-        echo $notify_message;
         Notifications::send_sms($notify_message, $phones, 'No', 91, 1);
         return true;
     }

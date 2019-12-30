@@ -68,7 +68,6 @@ class ApiDrspanelController extends ActiveController {
     public function beforeAction($action) {
         return parent::beforeAction($action);
         $this->enableCsrfValidation = false;
-        
     }
 
     /*
@@ -968,6 +967,7 @@ class ApiDrspanelController extends ActiveController {
                             //  $response['user_verified']=DrsPanel::getProfileStatus($user_id);
                             $response['message'] = 'You have entered same email as old';
                         } else {
+                            $otp = DrsPanel::randomOTP();
                             //update email & send otp
                             $model = UserVerification::find()->where(['user_id' => $user_id])->one();
                             if (empty($model)) {
@@ -977,6 +977,12 @@ class ApiDrspanelController extends ActiveController {
                             $model->email = $params['email'];
                             $model->otp = 1234;
                             if ($model->save()) {
+                                $userDetail = UserProfile::find()->where(['user_id' => $user_id])->one();
+                                $userPhone = User::find()->andWhere(['id' => $user_id])->one();
+                                $userD = UserVerification::find()->where(['user_id' => $user_id])->one();
+                                \common\components\MailSend::sendOtpMail($userDetail, $userD, $otp);
+                                $message = $otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.';
+                                $sendSms = Notifications::send_sms($message, $userPhone['phone'], 'No', $userPhone['countrycode'], 1);
                                 $response["status"] = 1;
                                 $response["error"] = false;
                                 //  $response['user_verified']=DrsPanel::getProfileStatus($user_id);
@@ -1003,6 +1009,7 @@ class ApiDrspanelController extends ActiveController {
                             //  $response['user_verified']=DrsPanel::getProfileStatus($user_id);
                             $response['message'] = 'You have entered same mobile number as old';
                         } else {
+                            $otp = DrsPanel::randomOTP();
                             //update email & send otp
                             $model = UserVerification::find()->where(['user_id' => $user_id])->one();
                             if (empty($model)) {
@@ -1012,6 +1019,12 @@ class ApiDrspanelController extends ActiveController {
                             $model->phone = $params['mobile'];
                             $model->otp = 1234;
                             if ($model->save()) {
+                                $userDetail = UserProfile::find()->where(['user_id' => $user_id])->one();
+                                $userD = UserVerification::find()->where(['user_id' => $user_id])->one();
+                                $userPhone = User::find()->andWhere(['id' => $user_id])->one();
+                                \common\components\MailSend::sendOtpMail($userDetail, $userD, $otp);
+                                $message = $otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.';
+                                $sendSms = Notifications::send_sms($message, $userPhone['phone'], 'No', $userPhone['countrycode'], 1);
                                 $response["status"] = 1;
                                 $response["error"] = false;
                                 //  $response['user_verified']=DrsPanel::getProfileStatus($user_id);
@@ -1270,7 +1283,7 @@ class ApiDrspanelController extends ActiveController {
                                             $response["status"] = 1;
                                             $response["error"] = false;
                                             $response["otp_alert"] = 1;
-                                            $response['data'] = DrsPanel::profiledetails($user, $profile, $groupid);
+                                            $response['data'] = DrsPanel::profiledetails($user, $profile, $groupid, $params['user_id']);
                                             $response['user_verified'] = DrsPanel::getProfileStatus($user_id);
                                             $response['message'] = 'Profile saved & otp sended';
                                         } else {
@@ -1281,7 +1294,7 @@ class ApiDrspanelController extends ActiveController {
                                         $response["status"] = 1;
                                         $response["error"] = false;
                                         $response["otp_alert"] = 0;
-                                        $response['data'] = DrsPanel::profiledetails($user, $profile, $groupid);
+                                        $response['data'] = DrsPanel::profiledetails($user, $profile, $groupid, $params['user_id']);
                                         $response['user_verified'] = DrsPanel::getProfileStatus($user_id);
                                         $response['message'] = $getResponseMessage;
                                     }

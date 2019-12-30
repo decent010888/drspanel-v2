@@ -38,7 +38,7 @@ class RefundSearch extends Transaction {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        if(isset($params['delete']) && $params['delete'] == 'yes') {
+        if (isset($params['delete']) && $params['delete'] == 'yes') {
             
         }
         $query = Transaction::find();
@@ -50,12 +50,11 @@ class RefundSearch extends Transaction {
         $query->joinWith(['userAppointment']);
         $query->Where(['user_appointment.id' => $this->appointment_id]);
         $query->Where(['transaction.type' => 'refund']);
-
-        $fromdate = date('Y-m-d', strtotime($params['fromdate']));
-
-        $todate = date('Y-m-d', strtotime($params['todate']));
-        $query->andFilterWhere(['between', 'txn_date', $fromdate, $todate]);
-
+        if (isset($params['fromdate']) && isset($params['todate'])) {
+            $fromdate = date('Y-m-d', strtotime($params['fromdate']));
+            $todate = date('Y-m-d', strtotime($params['todate']));
+            $query->andFilterWhere(['between', 'txn_date', $fromdate, $todate]);
+        }
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

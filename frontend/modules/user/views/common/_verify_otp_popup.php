@@ -23,6 +23,7 @@ use yii\helpers\Html;
                 else{
                     $label='Enter the 4-digit code send via Email on '.$user->email;
                 }
+                $model->otp = '';
                 echo $form->field($model, 'otp')->textInput(['placeholder'=>'Please enter otp'])->label($label);
 
                 ?>
