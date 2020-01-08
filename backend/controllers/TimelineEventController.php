@@ -18,18 +18,21 @@ class TimelineEventController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        $totalDoctor = \common\models\User::find()->where(['groupid' => 4,'status' => 2])->count();
-        $totalHospital = \common\models\User::find()->where(['groupid' => 5,'status' => 2])->count();
-        $totalPatient = \common\models\User::find()->where(['groupid' => 3,'status' => 2])->count();
+        $totalDoctor = \common\models\User::find()->where(['groupid' => 4, 'status' => 2])->count();
+        $totalHospital = \common\models\User::find()->where(['groupid' => 5, 'status' => 2])->count();
+        $totalPatient = \common\models\User::find()->where(['groupid' => 3, 'status' => 2])->count();
         $getAllAppoint = \common\models\UserAppointmentLogs::getAppointment();
+        $monthName = array();
+        $monthDataArr = $mothApp = '';
         foreach ($getAllAppoint as $appData) {
             $dateObj = \DateTime::createFromFormat('!m', $appData['month']);
             $monthName[] = "'" . $dateObj->format('F') . "'";
             $monthApp[] = "'" . $appData['app'] . "'";
         }
-        $monthDataArr = implode(',', $monthName);
-        $mothApp = implode(',', $monthApp);
-
+        if ($monthName) {
+            $monthDataArr = implode(',', $monthName);
+            $mothApp = implode(',', $monthApp);
+        }
         return $this->render('index', [
                     'mothApp' => $mothApp,
                     'monthDataArr' => $monthDataArr,

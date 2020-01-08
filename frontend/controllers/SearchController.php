@@ -251,7 +251,7 @@ class SearchController extends Controller {
             if (!empty($user)) {
 
                 $hospital_id = $profile->user_id;
-                $getspecialities = Drspanel::getMyHospitalSpeciality($hospital_id);
+                $getspecialities = DrsPanel::getMyHospitalSpeciality($hospital_id);
                 $userAddress = UserAddress::findOne(['user_id' => $hospital_id]);
                 if (!empty($userAddress)) {
                     $addressImages = UserAddressImages::find()->where(['address_id' => $userAddress->id])->all();
@@ -638,7 +638,7 @@ class SearchController extends Controller {
         $lists->where(['user_profile.groupid' => $groupid]);
         $lists->andWhere(['user.status' => User::STATUS_ACTIVE,
             'user.admin_status' => [User::STATUS_ADMIN_LIVE_APPROVED, User::STATUS_ADMIN_APPROVED]]);
-        $lists->andWhere(['user_profile.shifts' => 1]);
+        //$lists->andWhere(['user_profile.shifts' => 1]);
         if ($v1 != '') {
             $lists->andFilterWhere(['or', $v1]);
         }
@@ -653,7 +653,7 @@ class SearchController extends Controller {
         }
 
         if ($groupid == Groups::GROUP_HOSPITAL) {
-            $addSpeciality = Drspanel::addHospitalSpecialityCount($lists->createCommand()->queryAll());
+            $addSpeciality = DrsPanel::addHospitalSpecialityCount($lists->createCommand()->queryAll());
             $lists->joinWith('hospitalSpecialityTreatment');
 
             $listcat = array();
@@ -687,6 +687,7 @@ class SearchController extends Controller {
             } else {
                 $lists->andWhere((['user.id' => $userLocation]));
             }
+            
         } else {
             $listcat = $listtreatment = array();
             $listareas = array();
@@ -794,7 +795,7 @@ class SearchController extends Controller {
 
         $lists = $command->queryAll();
 
-
+        
 
         return array('lists' => $lists, 'city' => $city, 'type' => $type, 'q' => $q, 'pagination' => $pagination,
             'offset' => $offset, 'recordlimit' => $recordlimit, 'totalpages' => $totalpages);

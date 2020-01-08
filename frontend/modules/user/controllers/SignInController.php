@@ -177,8 +177,8 @@ class SignInController extends \yii\web\Controller {
                 $message .= '</body></html>';
                 $headers = 'MIME-Version: 1.0' . "\r\n";
                 $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-                $headers .= 'From: Drspanel <support@drspanel.in>'. "\r\n" .
-                        'Reply-To: Drspanel <support@drspanel.in>'. "\r\n" .
+                $headers .= 'From:'.$from. "\r\n" .
+                        'Reply-To:'.$from. "\r\n" .
                         'X-Mailer: PHP/' . phpversion();
                 mail($to_email, $subject, $message, $headers);
                 $message = $user->otp . ' is the OTP for accessing your DrsPanel account. PLS DO NOT SHARE IT WITH ANYONE.';
@@ -235,8 +235,8 @@ class SignInController extends \yii\web\Controller {
                     } elseif ($groupid == Groups::GROUP_ATTENDER) {
                         return $this->redirect(['attender/appointments']);
                     } elseif ($groupid == Groups::GROUP_PATIENT) {
-                        //return $this->redirect(['patient/profile']);
-                        return $this->redirect(Yii::$app->request->referrer);
+                        return $this->redirect(['patient/profile']);
+                        //return $this->redirect(Yii::$app->request->referrer);
                     } else {
                         return $this->redirect(array('/'));
                     }

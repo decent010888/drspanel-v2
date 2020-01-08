@@ -47,7 +47,7 @@ $this->registerJs($js,\yii\web\VIEW::POS_END);
       </div>
 
         <div id="statistics-appointments">
-          <?php echo $this->render('/common/_appointment-token',['appointments'=>$appointments,'typeselected'=>$typeselected,'typeCount'=>$typeCount,'userType'=>'attender','doctor'=>$doctor])?>
+          <?php echo $this->render('/common/_appointment-token',['appointments'=>$appointments,'typeselected'=>$typeselected,'typeCount'=>$typeCount,'userType'=>'attender','doctor'=>$doctor, 'doctor_id' => $doctor->id])?>
       </div>
   <?php } else{
       echo "You have no appointment.";

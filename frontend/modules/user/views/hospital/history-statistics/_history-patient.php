@@ -76,8 +76,7 @@ if (!empty($typeCount)) {
         </ul>
     </div>
 </div>
-
-<div class="row shift-tokens">
+<div class="row ">
     <div class="col-md-12 col-sm-12">
         <div class="row">
             <div class="col-md-4 col-sm-6">
@@ -120,6 +119,10 @@ if (!empty($typeCount)) {
         </div>
     </div>
     <div class="clearfix"></div>
+</div>
+<div class="row shift-tokens">
+
+
     <?php if (!empty($appointments)) { ?>
         <?php
         foreach ($appointments as $key => $appointment) {

@@ -95,7 +95,7 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                     <div class="appointment_part">
                         <div class="appointment_details">
                             <div class="pace-part main-tow">
-                                <h3 class="addnew">Edit Profilesss <?php echo \yii\helpers\Url::to('@frontendUrl'); ?></h3>
+                                <h3 class="addnew">Edit Profile <?php //echo \yii\helpers\Url::to('@frontendUrl'); ?></h3>
 
                                 <?php $form = ActiveForm::begin(['id' => 'patient-profile-form', 'options' => ['enctype' => 'multipart/form-data']]); ?>
                                 <div class="row">
@@ -178,7 +178,7 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                     </div>
 
                                     <div class="col-md-6">
-                                        <?php echo $form->field($userModel, 'phone', ['template' => '{input}<a href="javascript:void(0)" class="profile_edit_input" id="phone_' . $userProfile->user_id . '" data-userType="patient" data-keyid="' . $userProfile->user_id . '"><i class="fa fa-edit" aria-hidden="true" data-id="88"></i></a>{error}'])->textInput(['class' => 'input_field input_phone_edit', 'placeholder' => 'Phone', 'readOnly' => true])->label(false); ?>
+                                        <?php echo $form->field($userModel, 'phone')->textInput(['class' => 'input_field input_phone_edit', 'placeholder' => 'Phone', 'readOnly' => true])->label(false); ?>
 
                                     </div>
 

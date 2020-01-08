@@ -71,7 +71,7 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
 </div>
 
 <div class="doc-boxespart-book">
-    <div class="col-md-12 col-sm-12">
+    <div class="col-md-12 col-sm-12" style="display:none">
         <div class="row">
             <div class="col-md-3 col-sm-6">
                 <?php
@@ -105,7 +105,7 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                 ?>
 
             </div>
-            <div class="col-md-5 col-sm-6 report_button">
+            <div class="col-md-6 col-sm-6 report_button">
                 <label class="control-label">&nbsp;</label>
                 <button class="btn btn-danger delete_statement" type="button">Delete</button>
                 <button class="btn btn-success download_statement" type="button">Download</button>

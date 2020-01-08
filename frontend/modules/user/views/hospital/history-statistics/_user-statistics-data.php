@@ -1,13 +1,14 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$baseUrl= Yii::getAlias('@frontendUrl');
-$loginUser=Yii::$app->user->identity;
-$this->title = Yii::t('frontend','DrsPanel :: User Statistics Data');
+$baseUrl = Yii::getAlias('@frontendUrl');
+$loginUser = Yii::$app->user->identity;
+$this->title = Yii::t('frontend', 'DrsPanel :: User Statistics Data');
 
-$getTabContent="'".$baseUrl."/hospital/ajax-statistics-data'";
-$js="    
+$getTabContent = "'" . $baseUrl . "/hospital/ajax-statistics-data'";
+$js = "    
     $(document).on('click', '.get-appointments',function () {        
         datakey = $('li.active').attr('id');
         doctorid=$(this).attr('data-doctorid');
@@ -33,15 +34,15 @@ $js="
       });
     });
 ";
-$this->registerJs($js,\yii\web\VIEW::POS_END);
+$this->registerJs($js, \yii\web\VIEW::POS_END);
 ?>
 <div class="doc-timingslot">
     <ul>
-        <?php echo $this->render('/common/_shifts',['shifts'=>$shifts,'current_shifts'=>$current_shifts,'doctor'=>$doctor,'type'=>'user_history','userType'=>$userType]);?>
+<?php echo $this->render('/common/_shifts', ['shifts' => $shifts, 'current_shifts' => $current_shifts, 'doctor' => $doctor, 'type' => 'user_history', 'userType' => $userType]); ?>
     </ul>
 </div>
-<?php if(count($shifts)>0){ ?>
+    <?php if (count($shifts) > 0) { ?>
     <div id="statistics-appointments">
-        <?php echo $this->render('/common/_appointment-token',['appointments'=>$appointments,'doctor'=>$doctor,'typeselected'=>$typeselected,'typeCount'=>$typeCount,'userType'=>$userType])?>
+    <?php echo $this->render('/common/_appointment-token', ['appointments' => $appointments, 'doctor' => $doctor, 'typeselected' => $typeselected, 'typeCount' => $typeCount, 'userType' => $userType, 'doctor_id' => $doctor->id]) ?>
     </div>
 <?php } ?>

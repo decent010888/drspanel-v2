@@ -267,6 +267,8 @@ class PatientController extends \yii\web\Controller {
                         $data = ['identity' => 'You have entered same email as old'];
                         $result = ['status' => true, 'error' => true, 'data' => $data];
                     } else {
+                        $userDetail = \common\models\UserProfile::find()->where(['user_id' =>$user->id ])->one();
+                        $otp = DrsPanel::randomOTP();
                         //update email & send otp
                         $model = UserVerification::find()->where(['user_id' => $user_id])->one();
                         if (empty($model)) {
@@ -276,7 +278,20 @@ class PatientController extends \yii\web\Controller {
                         $model->email = $post['identity'];
                         $model->otp = 1234;
                         $model->save();
-
+                        
+                        $from = 'support@drspanel.in';
+                        $to_email = $post['identity'];
+                        $subject = 'Email OTP for mobile verification';
+                        $message = '<html><body>';
+                        $message .= '<h1>Hi ' . $userDetail['name'] . '!</h1>';
+                        $message .= '<p style="font-size:18px;">Your OTP is <strong>' . $model->otp . '</strong>. Please use this OTP for verify your mobile number.</p>';
+                        $message .= '</body></html>';
+                        $headers = 'MIME-Version: 1.0' . "\r\n";
+                        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                        $headers .= 'From: ' . $from . "\r\n" .
+                                'Reply-To: ' . $from . "\r\n" .
+                                'X-Mailer: PHP/' . phpversion();
+                        mail($to_email, $subject, $message, $headers);
                         $model->otp = '';
 
                         echo $this->renderAjax('/common/_verify_otp_popup', ['type' => $post['type'], 'user' => $user, 'model' => $model]);

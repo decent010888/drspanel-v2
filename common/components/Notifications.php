@@ -39,7 +39,7 @@ class Notifications {
             $appointment_date = date('d/m/Y', strtotime($appointment->date));
             $appointment_time = date('h:i a', $appointment->appointment_time);
             $send_message = 'Dear ' . $appointment->user_name . ' your appointment is booked with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. PLS reach before 15 min of your time.';
-                    
+
             if ($by == 'patient') {
                 $notify_message = 'Dear ' . $appointment->user_name . ' your appointment is booked with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. PLS reach before 15 min of your time.';
                 if ($appointment->user_id > 0) {
@@ -65,7 +65,7 @@ class Notifications {
             $appointment_date = date('d/m/Y', strtotime($appointment->date));
             $appointment_time = date('h:i a', $appointment->appointment_time);
             $send_message = 'Dear ' . $appointment->user_name . ' your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. has been cancelled by doctor due to any Emergency.';
-                    
+
             $notify_message = 'Dear ' . $appointment->user_name . ' your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. has been cancelled by doctor due to any Emergency.';
 
             if ($appointment->user_id > 0) {
@@ -88,7 +88,7 @@ class Notifications {
             $token = '';
             $appointment_date = date('d/m/Y', strtotime($appointment->date));
             $appointment_time = date('h:i a', $appointment->appointment_time);
-            
+
             $message = 'Dear ' . $appointment->user_name . ' your appointment is booked with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. PLS reach before 15 min of your time.';
             if ($appointment->user_id > 0) {
                 $user = User::findOne($appointment->user_id);
@@ -96,7 +96,7 @@ class Notifications {
                 $phones = $appointment->user_phone;
                 $notification_data = ['type' => 'appointment', 'message' => $message, 'user_id' => $user->id, 'appointment_id' => $appointment->id];
                 $sendNotification = Notifications::createNotification($user, $token, $type = 'reminder_notification', 'Reminder Notification', $message, $notification_id = $appointment->id, $device_type = $user->device_type, $notification_data);
-                
+
                 $sendSms = Notifications::send_sms($message, $phones, 'No', 91, 1);
             }
             return true;
@@ -122,11 +122,16 @@ class Notifications {
         foreach ($appointments as $key => $appointment) {
             if ($appointment->user_id > 0) {
                 $user = User::findOne($appointment->user_id);
+                $phones = $appointment->user_phone;
                 $token = $user->token;
                 $appointment_time = date('h:i a', $appointment->appointment_time);
-                $message = 'Your doctor ' . $appointment->doctor_name . ' started the shift ' . $appointment_time;
+
+                $message = 'Dear ' . $appointment->user_name . ' your shift with ' . $appointment->doctor_name . ' token no ' . $token . ' today at ' . $appointment_time . ' has been started. PLS reach the place before 15 min of your time.';
+
+                //$message = 'Your doctor ' . $appointment->doctor_name . ' started the shift ' . $appointment_time;
                 $notification_data = ['type' => 'shift_status', 'message' => $message, 'user_id' => $user->id, 'appointment_id' => $appointment->id];
                 $sendNotification = Notifications::createNotification($user, $token, $type = 'shift_status', 'DrsPanel Shift Start', $message, $notification_id = $appointment->id, $device_type = $user->device_type, $notification_data);
+                $sendSms = Notifications::send_sms($message, $phones, 'No', 91, 1);
             }
         }
         return true;

@@ -164,7 +164,7 @@ class HospitalController extends \yii\web\Controller {
 
         $treatmentList = UserProfile::find()->andWhere(['user_id' => $id])->andWhere(['groupid' => Groups::GROUP_HOSPITAL])->all();
 
-        $profilepercentage = DrsPanel::profiledetails($userModel, $userProfile, $groupid);
+        $profilepercentage = DrsPanel::profiledetails($userModel, $userProfile, $groupid, $id);
 
         $servicesList = UserProfile::find()->andWhere(['user_id' => $id])->andWhere(['groupid' => Groups::GROUP_HOSPITAL])->all();
 
@@ -543,7 +543,8 @@ class HospitalController extends \yii\web\Controller {
                 $doctor = User::findOne($doctorProfile->user_id);
 
                 $address = UserAddress::find()->andWhere(['user_id' => $id])->one();
-
+                //$address = UserAddress::find()->andWhere(['user_id' => $doctor->id])->one();
+                //echo '<pre>';print_r($address); die;
                 $shifts = DrsPanel::getShiftListByAddress($doctor->id, $address->id);
 
                 return $this->render('shift/my-shifts', ['address' => $address, 'shifts' => $shifts, 'doctor' => $doctor, 'hospital' => $hospital, 'doctorProfile' => $doctorProfile]);

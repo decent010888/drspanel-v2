@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = 'Appointments';
 ?>
 <div class="box">
     <div class="box-body">
+        <?php echo $this->render('_searchdate',['doctor_id' => $model->id]); ?>
         <div class="user-appointment-index">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
@@ -66,7 +67,7 @@ $this->params['breadcrumbs'][] = 'Appointments';
                         }
                     ],
 
-                    'updated_at:datetime',
+                    'created_at:datetime',
                     //'updated_at',
 
 

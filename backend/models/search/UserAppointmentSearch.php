@@ -46,7 +46,7 @@ class UserAppointmentSearch extends UserAppointment
      */
     public function search($params,$id)
     {
-        $query = UserAppointment::find()->where(['doctor_id'=>$id]);
+        $query = UserAppointment::find()->where(['doctor_id'=>$id])->andWhere('`deleted_at` IS NULL')->orderBy('id DESC');
 
         // add conditions that should always apply here
 

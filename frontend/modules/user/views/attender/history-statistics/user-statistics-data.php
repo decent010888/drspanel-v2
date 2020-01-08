@@ -48,7 +48,7 @@ $this->title = Yii::t('frontend','DrsPanel :: User Statistics Data');
 
               <div class="hospitals-detailspt appointment_list">
                   <div class="doc-boxespart-book" id="history-content">
-                      <?php echo $this->render('/attender/history-statistics/_user-statistics-data',['typeCount'=>$typeCount,'typeselected'=>$typeselected,'appointments'=>$appointments,'shifts'=>$shifts,'doctor'=>$doctor,'current_shifts'=>$current_selected,'type'=>'user_history','userType'=>'attender'])?>
+                      <?php echo $this->render('/attender/history-statistics/_user-statistics-data',['typeCount'=>$typeCount,'typeselected'=>$typeselected,'appointments'=>$appointments,'shifts'=>$shifts,'doctor'=>$doctor,'current_shifts'=>$current_selected,'type'=>'user_history','userType'=>'attender', 'doctor_id' => $doctor->id])?>
                   </div>
               </div>
         </div>

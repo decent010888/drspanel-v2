@@ -1307,7 +1307,7 @@ class DrsPanel {
             } else {
                 $status = [UserAppointment::STATUS_ACTIVE, UserAppointment::STATUS_PENDING, UserAppointment::STATUS_AVAILABLE, UserAppointment::STATUS_SKIP, UserAppointment::STATUS_COMPLETED];
             }
-            $lists = UserAppointment::find()->where(['doctor_id' => $doctor_id, 'date' => $date, 'schedule_id' => $current_selected])->andWhere(['status' => $status])->orderBy('token asc')->all();
+            $lists = UserAppointment::find()->where(['doctor_id' => $doctor_id, 'date' => $date, 'schedule_id' => $current_selected])->andWhere(['status' => $status])->andWhere('`deleted_at` IS NULL')->orderBy('token asc')->all();
 
             $total_history['total_patient'] = count($lists);
             if (!empty($lists)) {
@@ -3081,7 +3081,7 @@ class DrsPanel {
     public static function getDoctorSliders($params) {
         $response = $search = array();
         $offset = 0;
-        $recordlimit = 3;
+        $recordlimit = 10;
         $totalpages = 0;
         $count_result = 0;
         $user = User::find()->where(['id' => $params['user_id']])->andWhere(['groupid' => [Groups::GROUP_HOSPITAL, Groups::GROUP_ATTENDER]])->one();
@@ -3132,35 +3132,37 @@ class DrsPanel {
                     $lists->andWhere(new \yii\db\Expression($query_str));
                 }
             }
-            $command = $lists->createCommand();
-
-            if (isset($params['offset']) && $params['offset'] != '') {
-                $offset = $params['offset'];
-            }
-            $countQuery = clone $lists;
-            $totalpages = new Pagination(['totalCount' => $countQuery->count()]);
-            $lists->limit($recordlimit);
-            $lists->offset($offset);
             $lists->all();
             $command = $lists->createCommand();
             $lists = $command->queryAll();
 
-            if (isset($totalpages)) {
-                $count_result = $totalpages->totalCount;
-            }
-            if ($count_result == null) {
-                $count_result = count($lists);
-                $offset = count($lists);
-            } else {
-                $oldoffset = $offset;
-                $offset = $offset + $recordlimit;
-                if ($offset > $count_result) {
-                    $offset = $oldoffset + count($lists);
-                }
-            }
-
-            $totallist['totalcount'] = $count_result;
-            $totallist['offset'] = $offset;
+//            if (isset($params['offset']) && $params['offset'] != '') {
+//                $offset = $params['offset'];
+//            }
+//            $countQuery = clone $lists;
+//            $totalpages = new Pagination(['totalCount' => $countQuery->count()]);
+//            $lists->limit($recordlimit);
+//            $lists->offset($offset);
+//            $lists->all();
+//            $command = $lists->createCommand();
+//            $lists = $command->queryAll();
+//
+//            if (isset($totalpages)) {
+//                $count_result = $totalpages->totalCount;
+//            }
+//            if ($count_result == null) {
+//                $count_result = count($lists);
+//                $offset = count($lists);
+//            } else {
+//                $oldoffset = $offset;
+//                $offset = $offset + $recordlimit;
+//                if ($offset > $count_result) {
+//                    $offset = $oldoffset + count($lists);
+//                }
+//            }
+//
+//            $totallist['totalcount'] = $count_result;
+//            $totallist['offset'] = $offset;
 
             $list_a = Drspanel::getList($lists, 'hospital_doctors', $hospital_id);
             $data_array = array_values($list_a);
@@ -6846,8 +6848,9 @@ class DrsPanel {
 
                     $refundData = array("ORDERID" => $refundResponce['body']['orderId'], "MID" => $refundResponce['body']['mid'], "REFID" => isset($refundResponce['body']['refId']) ? $refundResponce['body']['refId'] : 0, "STATUS" => $refundResponce['body']['resultInfo']['resultStatus'], "RESULTMSG" => $refundResponce['body']['resultInfo']['resultMsg'], "REFUNDID" => $refundResponce['body']['refundId'], "TXNID" => $refundResponce['body']['txnId'], "REFUNDAMOUNT" => $refundResponce['body']['refundAmount']);
 
-                    $transactionModel = Transaction::find()->where(['appointment_id' => $appointmentId, 'type' => 'refund'])->one();
+                    $transactionModel = Transaction::find()->where(['appointment_id' => $appointmentId])->one();
                     $transactionModel->paytm_response = json_encode($refundData);
+                    $transactionModel->type = 'refund';
                     $transactionModel->status = strtolower($refundResponce['body']['resultInfo']['resultStatus']);
                     if ($by == 'Patient' || $by == 'patient') {
                         $transactionModel->refund_by = 'Patient';
@@ -7371,7 +7374,7 @@ class DrsPanel {
             $doctor = UserProfile::find()->where(['user_id' => $user_id])->one();
 
             //$appointments = $typeCount = $history = [];
-
+           
             $getAppointments = DrsPanel::appointmentHistoryPeriod($user_id, $hospitalId, $dateFrom, $dateTo, $shiftid);
             $appointments = $getAppointments['bookings'];
             $history = $getAppointments['total_history'];

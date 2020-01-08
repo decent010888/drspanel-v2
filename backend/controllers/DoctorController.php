@@ -41,6 +41,7 @@ use backend\models\AddScheduleForm;
 use yii\bootstrap\ActiveForm;
 use yii\web\UploadedFile;
 use Intervention\Image\ImageManagerStatic;
+use kartik\mpdf\Pdf;
 
 /**
  * DoctorController implements the CRUD actions for User model.
@@ -2458,6 +2459,79 @@ class DoctorController extends Controller {
             }
         }
         return $result;
+    }
+
+    public function actionGetAppointmentReport() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        if (Yii::$app->request->post()) {
+            $params = Yii::$app->request->post();
+           
+            $model = DrsPanel::getBookingHistory($params);
+            if (!empty($model['appointments'])) {
+                $content = $this->renderPartial('/layouts/_reportView', ['appointments' => $model['appointments'], 'doctor' => $model['doctor']]);
+
+                // setup kartik\mpdf\Pdf component
+                $pdf = new Pdf([
+                    // set to use core fonts only
+                    'mode' => Pdf::MODE_UTF8,
+                    // A4 paper format
+                    'format' => Pdf::FORMAT_FOLIO,
+                    // portrait orientation
+                    'orientation' => Pdf::ORIENT_PORTRAIT,
+                    // stream to browser inline
+                    'destination' => Pdf::DEST_FILE,
+                    // your html content input
+                    'content' => $content,
+                    // format content from your own css file if needed or use the
+                    // enhanced bootstrap css built by Krajee for mPDF formatting 
+                    //'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+                    // any css to be embedded if required
+                    //'cssInline' => '.kv-heading-1{font-size:14px}',
+                    // set mPDF properties on the fly
+                    'options' => ['title' => 'Appointment Statement'],
+                    // call mPDF methods on the fly
+                    'methods' => [
+                        'SetTitle' => 'Appointment Statement - drspanel.in',
+                        'SetSubject' => 'Appointment',
+                        'SetHeader' => ['DrsPanel Appointment Statement||Generated On: ' . date("r")],
+                        'SetFooter' => ['|Page {PAGENO}|'],
+                        'SetAuthor' => 'Drspanel',
+                        'SetCreator' => 'Drspanel',
+                        'SetKeywords' => 'Appointment',
+                    ]
+                ]);
+
+                $pdf->filename = 'statement.pdf';
+
+                // return the pdf output as per the destination setting
+                $pdf->render();
+                $result = ['status' => 'success'];
+                return json_encode($result);
+                exit();
+            } else {
+                Yii::$app->session->setFlash('error', "'Statement not available'");
+                return $this->redirect(Yii::$app->request->referrer);
+            }
+        } else {
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
+
+    public function actionDeleteAppointment() {
+        $params = Yii::$app->request->post();
+        if (isset($params['dateFrom']) && $params['dateFrom'] != '' && isset($params['dateTo']) && $params['dateTo'] != '') {
+            $deleteAppointment = DrsPanel::deleteAppointment($params);
+            if ($deleteAppointment['status'] == 'success') {
+                Yii::$app->session->setFlash('success', "'Statement delete successfully'");
+                return $this->redirect(Yii::$app->request->referrer);
+            } else {
+                Yii::$app->session->setFlash('success', "'Somthing went problem.'");
+                return $this->redirect(Yii::$app->request->referrer);
+            }
+        } else {
+            Yii::$app->session->setFlash('error', "'Please select date range from date to to date'");
+            return $this->redirect(Yii::$app->request->referrer);
+        }
     }
 
 }
