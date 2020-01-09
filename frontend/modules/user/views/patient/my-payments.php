@@ -42,12 +42,12 @@ $this->title = Yii::t('frontend', 'DrsPanel :: My Payments');
                                         <td><?php echo $paymentData['user_name'] . '<br>' . $paymentData['user_phone'] ?></td>
                                         <td><?php echo $paymentData['token'] ?></td>
                                         <td><?php echo $paymentData['doctor_name'] ?></td>
-                                        <td style="width: 220px;"><?php echo '<strong>'.$doctorAddress['type'] . ':</strong> ' . $doctorAddress['name'] . '<br>' . $doctorAddress['address'] ?></td>
+                                        <td style="width: 220px;"><?php echo '<strong>' . $doctorAddress['type'] . ':</strong> ' . $doctorAddress['name'] . '<br>' . $doctorAddress['address'] ?></td>
                                         <td><?php echo $paymentData['shift_label'] . '<br>' . $paymentData['shift_name'] ?></td>
-                                        <td><?php echo '<i class="fa fa-rupee"></i>'.$paymentData['txn_amount'] ?></td>
+                                        <td><?php echo '<i class="fa fa-rupee"></i>' . $paymentData['txn_amount'] ?></td>
                                         <td><?php echo $paymentData['refund_by'] != '' ? 'Refund' : 'Completed' ?></td>
                                         <td><?php echo date('d M, Y', strtotime($paymentData['originate_date'])) ?></td>
-                                        <td><a href="" class="btn btn-info">Recipt</a></td>
+                                        <td><a href="javascript:;" class="btn btn-default printReceipt" id="printReceipt" data-id="<?php echo $paymentData['appointment_id'] ?>">Receipt</a></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -63,3 +63,27 @@ $this->title = Yii::t('frontend', 'DrsPanel :: My Payments');
         </div>
     </div>
 </section>
+<?php
+$baseUrl = Yii::getAlias('@frontendUrl');
+$statementFileLink = $baseUrl . '/receipt.pdf';
+$printReceipt = "'" . $baseUrl . "/patient/print-receipt'";
+$this->registerJs("
+    $(document).on('click', '#printReceipt', function () {
+        appointmentId =$(this).attr('data-id');
+        $('#main-js-preloader').show();
+        $.ajax({
+            dataType:'JSON',
+            method:'POST',
+            url: $printReceipt,
+            data: {appointmentId:appointmentId}
+        })
+        .done(function( responce_data ) { 
+        $('#main-js-preloader').hide();
+            if (responce_data.status == 'success') {
+                window.open('$statementFileLink', '_blank');
+            }
+        })// ajax close		
+
+    }); //close addresss List
+    ", \yii\web\VIEW::POS_END);
+?>

@@ -296,10 +296,10 @@ class DrsPanel {
             if ($userType == $groupid) {
                 $newuser = 'old';
                 $otp = DrsPanel::randomOTP();
-                $checkUser->otp = $otp;
+                $checkUser->otp = 1234;
                 $checkUser->mobile_verified = 0;
                 if ($checkUser->save()) {
-                    $userDetail = UserProfile::find()->where(['user_id' =>$checkUser->id ])->one();
+                    $userDetail = UserProfile::find()->where(['user_id' => $checkUser->id])->one();
                     $from = 'support@drspanel.in';
                     $to_email = $checkUser->email;
                     $subject = 'Email OTP for mobile verification';
@@ -309,8 +309,8 @@ class DrsPanel {
                     $message .= '</body></html>';
                     $headers = 'MIME-Version: 1.0' . "\r\n";
                     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-                    $headers .= 'From: Drspanel <support@drspanel.in>'."\r\n" .
-                            'Reply-To: Drspanel <support@drspanel.in>'."\r\n" .
+                    $headers .= 'From: Drspanel <support@drspanel.in>' . "\r\n" .
+                            'Reply-To: Drspanel <support@drspanel.in>' . "\r\n" .
                             'X-Mailer: PHP/' . phpversion();
                     mail($to_email, $subject, $message, $headers);
 
@@ -7374,7 +7374,7 @@ class DrsPanel {
             $doctor = UserProfile::find()->where(['user_id' => $user_id])->one();
 
             //$appointments = $typeCount = $history = [];
-           
+
             $getAppointments = DrsPanel::appointmentHistoryPeriod($user_id, $hospitalId, $dateFrom, $dateTo, $shiftid);
             $appointments = $getAppointments['bookings'];
             $history = $getAppointments['total_history'];
@@ -7383,6 +7383,28 @@ class DrsPanel {
             $dataArr = array('appointments' => $appointments, 'history' => $history, 'typeCount' => $typeCount, 'doctor' => $doctor, 'hospital' => $hospitalId);
         }
         return $dataArr;
+    }
+
+    public static function getBookingData($appointMentID) {
+        if ($appointMentID > 0) {
+            $query = new Query;
+            $query->select([
+                        'transaction.txn_amount',
+                        'transaction.originate_date',
+                        'transaction.paytm_response',
+                        'user_appointment.user_name',
+                        'user_appointment.doctor_name',
+                        'user_appointment.date',
+                        'user_appointment.appointment_time',
+                    ])
+                    ->from('transaction')
+                    ->join('LEFT JOIN', 'user_appointment', 'transaction.appointment_id =user_appointment.id')
+                    ->where(['transaction.appointment_id' => $appointMentID, 'transaction.type' => 'pay'])
+                    ->andWhere(['transaction.status' => 'completed']);
+            $command = $query->createCommand();
+            $data = $command->queryOne();
+            return $data;
+        }
     }
 
     public static function getBookingShiftsPeriod($doctor_id, $reportPeriod, $current_login) {

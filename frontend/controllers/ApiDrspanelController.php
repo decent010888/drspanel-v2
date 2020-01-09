@@ -57,6 +57,7 @@ use backend\models\AddScheduleForm;
 use backend\models\AttenderForm;
 use yii\web\UploadedFile;
 use yii\helpers\ArrayHelper;
+use kartik\mpdf\Pdf;
 
 /**
  * Site controller
@@ -3657,7 +3658,7 @@ class ApiDrspanelController extends ActiveController {
             $totallist['totalcount'] = $count_result;
             $totallist['offset'] = $offset;
 
-            $list_a = $this->getList($lists, 'list', $params['user_id']);
+            $list_a = $this->getList($lists, 'list', 49);
             $data_array = array_values($list_a);
             $response["status"] = 1;
             $response["error"] = false;
@@ -8302,6 +8303,197 @@ class ApiDrspanelController extends ActiveController {
             $response["status"] = 0;
             $response["error"] = true;
             $response['message'] = 'Missing required fields';
+        }
+        Yii::info($response, __METHOD__);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        return $response;
+    }
+
+    public function actionGetAppointmentReport() {
+        $response = $data = $required = array();
+        $params = Yii::$app->request->post();
+        //print_r($params);die;
+        Yii::info($params, __METHOD__);
+        if (isset($params['dateFrom']) && $params['dateFrom'] != '' && isset($params['dateTo']) && $params['dateTo'] != '' && isset($params['shiftid']) && $params['shiftid'] != '') {
+            $model = DrsPanel::getBookingHistory($params);
+            if (!empty($model['appointments'])) {
+                $content = $this->renderPartial('//layouts/_reportView', ['appointments' => $model['appointments'], 'doctor' => $model['doctor']]);
+
+                // setup kartik\mpdf\Pdf component
+                $pdf = new Pdf([
+                    // set to use core fonts only
+                    'mode' => Pdf::MODE_UTF8,
+                    // A4 paper format
+                    'format' => Pdf::FORMAT_FOLIO,
+                    // portrait orientation
+                    'orientation' => Pdf::ORIENT_PORTRAIT,
+                    // stream to browser inline
+                    'destination' => Pdf::DEST_FILE,
+                    // your html content input
+                    'content' => $content,
+                    // format content from your own css file if needed or use the
+                    // enhanced bootstrap css built by Krajee for mPDF formatting 
+                    //'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+                    // any css to be embedded if required
+                    //'cssInline' => '.kv-heading-1{font-size:14px}',
+                    // set mPDF properties on the fly
+                    'options' => ['title' => 'Appointment Statement'],
+                    // call mPDF methods on the fly
+                    'methods' => [
+                        'SetTitle' => 'Appointment Statement - drspanel.in',
+                        'SetSubject' => 'Appointment',
+                        'SetHeader' => ['DrsPanel Appointment Statement||Generated On: ' . date("r")],
+                        'SetFooter' => ['|Page {PAGENO}|'],
+                        'SetAuthor' => 'Drspanel',
+                        'SetCreator' => 'Drspanel',
+                        'SetKeywords' => 'Appointment',
+                    ]
+                ]);
+
+                $pdf->filename = 'statement.pdf';
+
+                // return the pdf output as per the destination setting
+                $pdf->render();
+                $response["status"] = 1;
+                $response["error"] = false;
+                $response['message'] = 'success';
+                $response['data'] = Url::to('@frontendUrl') . '/statement.pdf';
+            } else {
+                $response["status"] = 0;
+                $response["error"] = true;
+                $response['message'] = 'Statement not available';
+                $response['data'] = '';
+            }
+        } else {
+            $response["status"] = 0;
+            $response["error"] = true;
+            $response['message'] = 'Missing required fields';
+            $response['data'] = '';
+        }
+        Yii::info($response, __METHOD__);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        return $response;
+    }
+
+    public function actionDeleteAppointment() {
+        $response = $data = $required = array();
+        $params = Yii::$app->request->post();
+        Yii::info($params, __METHOD__);
+        if (isset($params['dateFrom']) && $params['dateFrom'] != '' && isset($params['dateTo']) && $params['dateTo'] != '') {
+            $deleteAppointment = DrsPanel::deleteAppointment($params);
+            if ($deleteAppointment['status'] == 'success') {
+                $response["status"] = 1;
+                $response["error"] = false;
+                $response['message'] = 'success';
+            } else {
+                $response["status"] = 0;
+                $response["error"] = true;
+                $response['message'] = 'error';
+            }
+        } else {
+            $response["status"] = 0;
+            $response["error"] = true;
+            $response['message'] = 'Missing required fields';
+        }
+        Yii::info($response, __METHOD__);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        return $response;
+    }
+
+    public function actionMyPayments() {
+        $response = $data = $required = array();
+        $params = Yii::$app->request->post();
+        Yii::info($params, __METHOD__);
+        if (isset($params['user_id']) && $params['user_id'] != '') {
+            $userAppointment = UserAppointment::getPaymentHistory($params['user_id']);
+            foreach ($userAppointment as $paymentData) {
+                $txnId = json_decode($paymentData['paytm_response']);
+                $doctorAddress = UserAddress::findOne(['id' => $paymentData['doctor_address_id']]);
+                $row['appointment_id'] = $paymentData['appointment_id'];
+                $row['patientname'] = $paymentData['user_name'];
+                $row['patientphone'] = $paymentData['user_phone'];
+                $row['token'] = $paymentData['token'];
+                $row['doctor_name'] = $paymentData['doctor_name'];
+                $row['hospitalname'] = $doctorAddress['type'] . ' ' . $doctorAddress['name'];
+                $row['hospitaladdress'] = $doctorAddress['address'];
+                $row['shift_label'] = $paymentData['shift_label'];
+                $row['shift_name'] = $paymentData['shift_name'];
+                $row['amount'] = $paymentData['txn_amount'];
+                $row['status'] = $paymentData['refund_by'] != '' ? 'Refund' : 'Completed';
+                $row['bookdate'] = date('d M, Y', strtotime($paymentData['originate_date']));
+                $data[] = $row;
+            }
+            $response["status"] = 1;
+            $response["error"] = false;
+            $response['message'] = 'success';
+            $response['data'] = $data;
+        } else {
+            $response["status"] = 0;
+            $response["error"] = true;
+            $response['message'] = 'Missing required fields';
+        }
+        Yii::info($response, __METHOD__);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        return $response;
+    }
+
+    public function actionPrintReceipt() {
+        $response = $data = $required = array();
+        $params = Yii::$app->request->post();
+        //print_r($params);die;
+        Yii::info($params, __METHOD__);
+        if (isset($params['appointment_id']) && $params['appointment_id'] != '') {
+            $appointMentID = $params['appointment_id'];
+            $model = DrsPanel::getBookingData($appointMentID);
+
+            if (!empty($model)) {
+                $content = $this->renderPartial('//layouts/_printView', ['receiptData' => $model]);
+
+                // setup kartik\mpdf\Pdf component
+                $pdf = new Pdf([
+                    // set to use core fonts only
+                    'mode' => Pdf::MODE_UTF8,
+                    // A4 paper format
+                    'format' => Pdf::FORMAT_FOLIO,
+                    // portrait orientation
+                    'orientation' => Pdf::ORIENT_PORTRAIT,
+                    // stream to browser inline
+                    'destination' => Pdf::DEST_FILE,
+                    // your html content input
+                    'content' => $content,
+                    // set mPDF properties on the fly
+                    'options' => ['title' => 'Receipt'],
+                    // call mPDF methods on the fly
+                    'methods' => [
+                        'SetTitle' => 'Payment Receipt - drspanel.in',
+                        'SetSubject' => 'Payment Receipt',
+                        'SetHeader' => ['DrsPanel Payment Receipt||Generated On: ' . date("r")],
+                        'SetFooter' => ['|Page {PAGENO}|'],
+                        'SetAuthor' => 'Drspanel',
+                        'SetCreator' => 'Drspanel',
+                        'SetKeywords' => 'Payment Receipt',
+                    ]
+                ]);
+
+                $pdf->filename = 'receipt.pdf';
+
+                // return the pdf output as per the destination setting
+                $pdf->render();
+                $response["status"] = 1;
+                $response["error"] = false;
+                $response['message'] = 'success';
+                $response['data'] = Url::to('@frontendUrl') . '/receipt.pdf';
+            } else {
+                $response["status"] = 0;
+                $response["error"] = true;
+                $response['message'] = 'Statement not available';
+                $response['data'] = '';
+            }
+        } else {
+            $response["status"] = 0;
+            $response["error"] = true;
+            $response['message'] = 'Missing required fields';
+            $response['data'] = '';
         }
         Yii::info($response, __METHOD__);
         \Yii::$app->response->format = Response::FORMAT_JSON;

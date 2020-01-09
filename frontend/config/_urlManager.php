@@ -153,6 +153,7 @@ return [
         ['pattern'=>'patient/city-list', 'route'=>'user/patient/city-list'],
         ['pattern'=>'patient/city-area-list', 'route'=>'user/patient/city-area-list'],
         ['pattern'=>'patient/map-area-list', 'route'=>'user/patient/map-area-list'],
+        ['pattern'=>'patient/print-receipt', 'route'=>'user/patient/print-receipt'],
 
         ['pattern'=>'hospital/profile', 'route'=>'user/hospital/profile'],
         ['pattern'=>'hospital/edit-profile',     'route'=>'user/hospital/edit-profile'],

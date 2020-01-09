@@ -31,6 +31,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
+use kartik\mpdf\Pdf;
 
 /**
  * Class PatientController
@@ -267,7 +268,7 @@ class PatientController extends \yii\web\Controller {
                         $data = ['identity' => 'You have entered same email as old'];
                         $result = ['status' => true, 'error' => true, 'data' => $data];
                     } else {
-                        $userDetail = \common\models\UserProfile::find()->where(['user_id' =>$user->id ])->one();
+                        $userDetail = \common\models\UserProfile::find()->where(['user_id' => $user->id])->one();
                         $otp = DrsPanel::randomOTP();
                         //update email & send otp
                         $model = UserVerification::find()->where(['user_id' => $user_id])->one();
@@ -278,7 +279,7 @@ class PatientController extends \yii\web\Controller {
                         $model->email = $post['identity'];
                         $model->otp = 1234;
                         $model->save();
-                        
+
                         $from = 'support@drspanel.in';
                         $to_email = $post['identity'];
                         $subject = 'Email OTP for mobile verification';
@@ -1009,6 +1010,58 @@ class PatientController extends \yii\web\Controller {
                 }
             }
 
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
+
+    public function actionPrintReceipt() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        if (Yii::$app->request->post()) {
+            $params = Yii::$app->request->post();
+            $appointMentID = $params['appointmentId'];
+            $model = DrsPanel::getBookingData($appointMentID);
+           
+            if (!empty($model)) {
+                $content = $this->renderPartial('//layouts/_printView', ['receiptData' => $model]);
+
+                // setup kartik\mpdf\Pdf component
+                $pdf = new Pdf([
+                    // set to use core fonts only
+                    'mode' => Pdf::MODE_UTF8,
+                    // A4 paper format
+                    'format' => Pdf::FORMAT_FOLIO,
+                    // portrait orientation
+                    'orientation' => Pdf::ORIENT_PORTRAIT,
+                    // stream to browser inline
+                    'destination' => Pdf::DEST_FILE,
+                    // your html content input
+                    'content' => $content,
+                    // set mPDF properties on the fly
+                    'options' => ['title' => 'Receipt'],
+                    // call mPDF methods on the fly
+                    'methods' => [
+                        'SetTitle' => 'Payment Receipt - drspanel.in',
+                        'SetSubject' => 'Payment Receipt',
+                        'SetHeader' => ['DrsPanel Payment Receipt||Generated On: ' . date("r")],
+                        'SetFooter' => ['|Page {PAGENO}|'],
+                        'SetAuthor' => 'Drspanel',
+                        'SetCreator' => 'Drspanel',
+                        'SetKeywords' => 'Payment Receipt',
+                    ]
+                ]);
+
+                $pdf->filename = 'receipt.pdf';
+
+                // return the pdf output as per the destination setting
+                $pdf->render();
+                $result = ['status' => 'success'];
+                echo json_encode($result);
+                exit();
+            } else {
+                Yii::$app->session->setFlash('error', "'Statement not available'");
+                return $this->redirect(Yii::$app->request->referrer);
+            }
+        } else {
             return $this->redirect(Yii::$app->request->referrer);
         }
     }

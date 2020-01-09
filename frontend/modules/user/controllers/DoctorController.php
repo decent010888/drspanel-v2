@@ -3100,7 +3100,7 @@ class DoctorController extends \yii\web\Controller {
             $deleteAppointment = DrsPanel::deleteAppointment($params);
             if ($deleteAppointment['status'] == 'success') {
                 Yii::$app->session->setFlash('success', "'Statement delete successfully'");
-                return $this->redirect(Yii::$app->request->referrer);
+                //return $this->redirect(Yii::$app->request->referrer);
             } else {
                 Yii::$app->session->setFlash('success', "'Somthing went problem.'");
                 return $this->redirect(Yii::$app->request->referrer);
