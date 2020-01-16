@@ -51,50 +51,7 @@ $js = "
 ";
 $this->registerJs($js, \yii\web\VIEW::POS_END);
 ?>
-
-    <div class="col-md-12 col-sm-12">
-        <div class="row">
-            <div class="col-md-4 col-sm-6">
-                <?php
-                echo '<label class="control-label">From Date</label>';
-                echo DatePicker::widget([
-                    'name' => 'date_from',
-                    'type' => DatePicker::TYPE_INPUT,
-                    'value' => '',
-                    'pluginOptions' => [
-                        'autoclose' => true,
-                        'format' => 'dd-M-yyyy'
-                    ],
-                    'options' => ['class' => 'date_from']
-                ]);
-                ?>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <?php
-                echo '<label class="control-label">To Date</label>';
-                echo DatePicker::widget([
-                    'name' => 'date_to',
-                    'type' => DatePicker::TYPE_INPUT,
-                    'value' => '',
-                    'pluginOptions' => [
-                        'autoclose' => true,
-                        'format' => 'dd-M-yyyy',
-                        'class' => 'to_date'
-                    ],
-                    'options' => ['class' => 'date_to']
-                ]);
-                ?>
-
-            </div>
-            <div class="col-md-4 col-sm-6 report_button">
-                <label class="control-label">&nbsp;</label>
-                <button class="btn btn-danger delete_statement" type="button">Delete</button>
-                <button class="btn btn-success download_statement" type="button">Download</button>
-            </div>
-        </div>
-    </div>
-    <div class="clearfix"></div>
-
+<div class="row shift-tokens">
 <?php if (!empty($appointments)) { ?>
     <?php
     foreach ($appointments as $key => $appointment) {
@@ -126,8 +83,7 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
         <p>You have no any appointment for selected date.</p>
     </div>
 <?php } ?>
-
-
+</div>
 <div class="login-section ">
     <div class="modal fade model_opacity" id="patientbookedShowModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  style="display: none;">
         <div class="modal-dialog">

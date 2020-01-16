@@ -51,9 +51,9 @@ class Notifications {
         } elseif ($type == 'cancelled' && $by == 'patient') {
             $appointment_date = date('d/m/Y', strtotime($appointment->date));
             $appointment_time = date('h:i a', $appointment->appointment_time);
-            $send_message = 'Dear ' . $appointment->user_name . 'your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ', ' . $appointment_time . ' with token ' . $appointment->token . '. has been cancelled by you. . Please Rate us.';
+            $send_message = 'Dear ' . $appointment->user_name . 'your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ', ' . $appointment_time . ' with token ' . $appointment->token . ' has been cancelled by you. Please Rate us.';
 
-            $notify_message = 'Dear ' . $appointment->user_name . 'your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ', ' . $appointment_time . ' with token ' . $appointment->token . '. has been cancelled by you. . Please Rate us.';
+            $notify_message = 'Dear ' . $appointment->user_name . 'your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ', ' . $appointment_time . ' with token ' . $appointment->token . ' has been cancelled by you. Please Rate us.';
 
             if ($appointment->user_id > 0) {
                 $notification_data = ['type' => 'appointment', 'message' => $notify_message,
@@ -64,9 +64,9 @@ class Notifications {
         } elseif ($type == 'cancelled' && $by == 'doctor') {
             $appointment_date = date('d/m/Y', strtotime($appointment->date));
             $appointment_time = date('h:i a', $appointment->appointment_time);
-            $send_message = 'Dear ' . $appointment->user_name . ' your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. has been cancelled by doctor due to any Emergency.';
+            $send_message = 'Dear ' . $appointment->user_name . ' your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . ' has been cancelled by doctor due to any Emergency.';
 
-            $notify_message = 'Dear ' . $appointment->user_name . ' your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . '. has been cancelled by doctor due to any Emergency.';
+            $notify_message = 'Dear ' . $appointment->user_name . ' your appointment with ' . $appointment->doctor_name . ' on ' . $appointment_date . ' ' . $appointment_time . ' with token ' . $appointment->token . ' has been cancelled by doctor due to any Emergency.';
 
             if ($appointment->user_id > 0) {
                 $notification_data = ['type' => 'appointment', 'message' => $notify_message,
@@ -126,8 +126,8 @@ class Notifications {
                 $token = $user->token;
                 $appointment_time = date('h:i a', $appointment->appointment_time);
 
-                $message = 'Dear ' . $appointment->user_name . ' your shift with ' . $appointment->doctor_name . ' token no ' . $token . ' today at ' . $appointment_time . ' has been started. PLS reach the place before 15 min of your time.';
-
+                $message = 'Dear ' . $appointment->user_name . ' your shift with ' . $appointment->doctor_name . ' token no ' . $token . ' today at ' . $appointment_time . ' has been started. PLS reach the place before 15 minutes of your time.';
+                
                 //$message = 'Your doctor ' . $appointment->doctor_name . ' started the shift ' . $appointment_time;
                 $notification_data = ['type' => 'shift_status', 'message' => $message, 'user_id' => $user->id, 'appointment_id' => $appointment->id];
                 $sendNotification = Notifications::createNotification($user, $token, $type = 'shift_status', 'DrsPanel Shift Start', $message, $notification_id = $appointment->id, $device_type = $user->device_type, $notification_data);

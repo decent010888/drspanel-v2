@@ -6,11 +6,6 @@ use common\models\UserAddress;
 
 $base_url = Yii::getAlias('@frontendUrl');
 $doctorHospital = $profile;
-
-$js = "
-    $('.fancybox').fancybox();
-";
-$this->registerJs($js, \yii\web\VIEW::POS_END);
 ?>
 <?php $this->title = Yii::t('frontend', 'DrsPanel ::' . $doctorHospital->name); ?>
 <section class="mid-content-part">
@@ -64,11 +59,16 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                         <?php
                                         if (!empty($addressImages)) {
                                             foreach ($addressImages as $key => $addressImage) {
+                                                $hospitalId = $addressImage->id;
+                                                $js = "
+                                                    $('.fancybox'+$hospitalId).fancybox({ loop:false });
+                                                ";
+                                                $this->registerJs($js, \yii\web\VIEW::POS_END);
                                                 ?>
                                                 <?php $image_url = $addressImage->image_base_url . $addressImage->image_path . $addressImage->image; ?>
                                                 <li <?php if (isset($class) ? $class : '') ; ?>>
                                                     <div class="pace-list">
-                                                        <a class="fancybox" rel="gallery1" href="<?php echo $image_url; ?>">
+                                                        <a class="fancybox<?php echo $hospitalId ?>" rel="gallery1" href="<?php echo $image_url; ?>">
                                                             <img src="<?php echo $image_url ?>" alt=""  title="<?= $addressImage->image; ?>"/>
                                                         </a>
                                                     </div>

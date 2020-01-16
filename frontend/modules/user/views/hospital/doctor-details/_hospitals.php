@@ -5,11 +5,6 @@ use yii\helpers\ArrayHelper;
 use branchonline\lightbox\Lightbox;
 
 $baseUrl= Yii::getAlias('@frontendUrl'); 
-
-$js="
-    $('.fancybox').fancybox();
-";
-$this->registerJs($js,\yii\web\VIEW::POS_END); 
 ?>
 
 <?php 
@@ -56,13 +51,20 @@ $this->registerJs($js,\yii\web\VIEW::POS_END);
                     <?php
                     // pr($hospital['hospital_images']);die;
                      if(!empty($hospital['hospital_images'])) {
-                      
-                      foreach ($hospital['hospital_images'] as $key => $hospital_img) {  ?>
+                       
+                      foreach ($hospital['hospital_images'] as $key => $hospital_img) { 
+                          $hospitalId = $hospital['id'];
+                          $js = "
+                                $('.fancybox'+$hospitalId).fancybox({ loop:false });
+                            ";
+                            $this->registerJs($js, \yii\web\VIEW::POS_END);
+                          
+                          ?>
                     
                         <li <?php if(isset($class)?$class:''); ?>>
                         <div class="pace-list"> 
 
-                          <a class="fancybox" rel="gallery1" href="<?php echo $hospital_img['image'];?>">
+                          <a class="fancybox<?php echo $hospitalId ?>" rel="gallery1" href="<?php echo $hospital_img['image'];?>">
                               <img src="<?php echo $hospital_img['image'];?>" alt="" />
                               </a>
                            </div>

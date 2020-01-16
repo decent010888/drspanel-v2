@@ -159,23 +159,23 @@ $this->registerJs($js, \yii\web\VIEW::POS_END);
                                         ?>
                                     </div>
 
-                                    <div class="col-md-6" id="arealist_update">
+<!--                                    <div class="col-md-6" id="arealist_update">
                                         <?php
-                                        echo $form->field($userProfile, 'area')->widget(Select2::classname(), [
-                                            'data' => $area_list,
-                                            'size' => Select2::SMALL,
-                                            'options' => ['placeholder' => 'Select Area/Colony ...', 'multiple' => false],
-                                            'pluginOptions' => [
-                                                'tags' => true,
-                                                'allowClear' => true,
-                                                'multiple' => false,
-                                            ],
-                                        ])->label(false);
+//                                        echo $form->field($userProfile, 'area')->widget(Select2::classname(), [
+//                                            'data' => $area_list,
+//                                            'size' => Select2::SMALL,
+//                                            'options' => ['placeholder' => 'Select Area/Colony ...', 'multiple' => false],
+//                                            'pluginOptions' => [
+//                                                'tags' => true,
+//                                                'allowClear' => true,
+//                                                'multiple' => false,
+//                                            ],
+//                                        ])->label(false);
                                         ?>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <?= $form->field($userProfile, 'address1')->textInput(['placeholder' => 'Address'])->label(false) ?>
-                                    </div>
+                                    </div>-->
+<!--                                    <div class="col-md-6">
+                                        <?php //echo $form->field($userProfile, 'address1')->textInput(['placeholder' => 'Address'])->label(false) ?>
+                                    </div>-->
 
                                     <div class="col-md-6">
                                         <?php echo $form->field($userModel, 'phone')->textInput(['class' => 'input_field input_phone_edit', 'placeholder' => 'Phone', 'readOnly' => true])->label(false); ?>

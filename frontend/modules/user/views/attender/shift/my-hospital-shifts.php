@@ -21,7 +21,7 @@ $base_url= Yii::getAlias('@frontendUrl');
 
                 <?php
                 if(!empty($shifts)) { ?>
-                    <div class="pace-part patient-prodetials">
+                <div class="pace-part patient-prodetials">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="pace-icon">
