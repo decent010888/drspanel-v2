@@ -5,7 +5,7 @@ use kartik\date\DatePicker;
 use backend\models\AddScheduleForm;
 use common\components\DrsPanel;
 use kartik\select2\Select2;
-
+use common\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -15,83 +15,96 @@ $this->title = Yii::t('backend', '{modelClass}: ', ['modelClass' => 'Hospital'])
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Hospitals'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label'=>$model->email];
 
+$userStatus = User::find()->where(['id' => $userProfile->user_id])->one();
+
+$class = '';
+if($userStatus->admin_status == 'live_approved'){ 
+    $class = 'overlap';    
+}
 ?>
-<?= $this->render('_update_top', ['userProfile' => $userProfile]); ?>
+<style>
+.overlap {
+    pointer-events: none;
+}
+</style>
+<div class="<?php echo $class ?>">
+    <?= $this->render('_update_top', ['userProfile' => $userProfile]); ?>
 
-<div class="row" id="userdetails">
-    <div class="col-md-6">
-        <div class="nav-tabs-custom">
-            <div class="panel-heading">
-                <h3 class="panel-title">Personal Information</h3>
-            </div>
-            <div class="panel-body">
-                <?php $form = ActiveForm::begin(['id' => 'profile-form','options' => ['enctype'=> 'multipart/form-data']]); ?>
-                <div class="col-sm-12">
-                    <?php echo $form->field($userProfile, 'name') ?>
+    <div class="row" id="userdetails">
+        <div class="col-md-6">
+            <div class="nav-tabs-custom">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Personal Information</h3>
                 </div>
-                <div class="col-sm-12">
-                    <?php echo $form->field($model, 'email') ?>
-                </div>
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <?php echo $form->field($model, 'countrycode')->dropDownList(\common\components\DrsPanel::getCountryCode()) ?>
-                        </div>
-                        <div class="col-sm-9">
-                            <?php echo $form->field($model, 'phone') ?>
+                <div class="panel-body">
+                    <?php $form = ActiveForm::begin(['id' => 'profile-form','options' => ['enctype'=> 'multipart/form-data']]); ?>
+                    <div class="col-sm-12">
+                        <?php echo $form->field($userProfile, 'name') ?>
+                    </div>
+                    <div class="col-sm-12">
+                        <?php echo $form->field($model, 'email') ?>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <?php echo $form->field($model, 'countrycode')->dropDownList(\common\components\DrsPanel::getCountryCode()) ?>
+                            </div>
+                            <div class="col-sm-9">
+                                <?php echo $form->field($model, 'phone') ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <?= $form->field($userProfile, 'dob')->textInput()->widget(
-                            DatePicker::className(), [
-                            'convertFormat' => true,
-                            'options' => ['placeholder' => 'Establishment Date*'],
-                            'layout'=>'{input}{picker}',
-                            'pluginOptions' => [
-                            'autoclose'=>true,
-                            'format' => 'yyyy-MM-dd',
-                            'endDate' => date('Y-m-d'),
-                            'todayHighlight' => true
-                            ],])->label('Establishment Date'); ?>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <?= $form->field($userProfile, 'dob')->textInput()->widget(
+                                DatePicker::className(), [
+                                'convertFormat' => true,
+                                'options' => ['placeholder' => 'Establishment Date*'],
+                                'layout'=>'{input}{picker}',
+                                'pluginOptions' => [
+                                'autoclose'=>true,
+                                'format' => 'yyyy-MM-dd',
+                                'endDate' => date('Y-m-d'),
+                                'todayHighlight' => true
+                                ],])->label('Establishment Date'); ?>
+                            </div>
                         </div>
+                        <div  class="col-sm-12">
+                            <?php echo $form->field($userProfile, 'description')->widget(
+                                \yii\imperavi\Widget::className(),
+                                [
+                                'plugins' => ['fullscreen', 'fontcolor', 'video'],
+                                'options'=>[
+                                'minHeight'=>250,
+                                'maxHeight'=>250,
+                                'buttonSource'=>true,
+                                'imageUpload'=>Yii::$app->urlManager->createUrl(['/file-storage/upload-imperavi'])
+                                ]
+                                ]
+                                ) ?>
+                            </div>
+                            <div class="col-sm-12">
+                                <?= $form->field($userProfile, 'avatar')->fileInput([
+                                    'options' => ['accept' => 'image/*'],
+                    'maxFileSize' => 5000000, // 5 MiB
+
+                    ]);   ?>
+                    <?php if($userProfile->avatar){  ?>
+                    <div class="edit-image" style="margin-left: 200px;margin-top: -70px;">
+                        <img  src="<?php echo Yii::getAlias('@storageUrl/source/hospitals/').$userProfile->avatar; ?>" width="75" height="75"/>
                     </div>
-                    <div  class="col-sm-12">
-                        <?php echo $form->field($userProfile, 'description')->widget(
-                            \yii\imperavi\Widget::className(),
-                            [
-                            'plugins' => ['fullscreen', 'fontcolor', 'video'],
-                            'options'=>[
-                            'minHeight'=>250,
-                            'maxHeight'=>250,
-                            'buttonSource'=>true,
-                            'imageUpload'=>Yii::$app->urlManager->createUrl(['/file-storage/upload-imperavi'])
-                            ]
-                            ]
-                            ) ?>
-                        </div>
-                        <div class="col-sm-12">
-                            <?= $form->field($userProfile, 'avatar')->fileInput([
-                                'options' => ['accept' => 'image/*'],
-                'maxFileSize' => 5000000, // 5 MiB
-
-                ]);   ?>
-                <?php if($userProfile->avatar){  ?>
-                <div class="edit-image" style="margin-left: 200px;margin-top: -70px;">
-                    <img  src="<?php echo Yii::getAlias('@storageUrl/source/hospitals/').$userProfile->avatar; ?>" width="75" height="75"/>
+                    <?php } ?>
                 </div>
-                <?php } ?>
-            </div>
 
-            <div class="form-group clearfix col-sm-12">
-                <?php echo Html::submitButton(Yii::t('backend', 'Update'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            </div>
-            <?php ActiveForm::end(); ?>
+                <div class="form-group clearfix col-sm-12">
+                    <?php echo Html::submitButton(Yii::t('backend', 'Update'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                </div>
+                <?php ActiveForm::end(); ?>
 
+            </div>
         </div>
     </div>
-</div>
+
 
 <div class="col-md-6">
     <div class="nav-tabs-custom">
@@ -174,6 +187,7 @@ $this->params['breadcrumbs'][] = ['label'=>$model->email];
 
         </div>
     </div>
+</div>
 </div>
 </div>
 </div>

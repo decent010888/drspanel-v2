@@ -188,7 +188,7 @@ $baseUrl = Yii::getAlias('@backendUrl');
                         'label' => Yii::t('backend', 'Contact Us'),
                         'icon' => '<i class="fa fa-edit"></i>',
                         'url' => ['/contact-us/index'],
-                        'visible' => Yii::$app->user->can('manager')
+                        'visible' => Yii::$app->user->can('administrator')
                     ],
                     [
                         'label' => Yii::t('backend', 'Settings'),

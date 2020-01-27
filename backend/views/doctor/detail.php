@@ -6,6 +6,7 @@ use kartik\date\DatePicker;
 use backend\models\AddScheduleForm;
 use common\components\DrsPanel;
 use kartik\select2\Select2;
+use common\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -14,7 +15,8 @@ use kartik\select2\Select2;
 $this->title = Yii::t('backend', '{modelClass}: ', ['modelClass' => 'Doctor']) . ' ' . $model->username;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Doctors'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->email];
-
+$userStatus = User::find()->where(['id' => $userProfile->user_id])->one();
+//echo '<pre>';print_r($userStatus->admin_status);die;
 $degree_list = array();
 $speciality_list = $treatment_list = $services_list = array();
 foreach ($degrees as $d_key => $degree) {
@@ -77,11 +79,22 @@ $this->registerJs("
 ", \yii\web\VIEW::POS_END);
 ?>
 
+<?php 
+    $class = '';
+    if($userStatus->admin_status == 'live_approved'){ 
+        $class = 'overlap';    
+    } ?>
+
 <?= $this->render('_update_top', ['userProfile' => $userProfile]); ?>
 <style>
     .field-userprofile-avatar { display: inline-block;}
+    .overlap {
+    pointer-events: none;
+}
 </style>
+ <div class="<?php echo $class ?>">
 <div class="row" id="userdetails">
+
     <div class="col-md-6">
         <div class="nav-tabs-custom">
             <div class="panel-heading">
@@ -273,7 +286,7 @@ $this->registerJs("
             </div>
         </div>
     </div>
-
+</div>
 </div>
 
 

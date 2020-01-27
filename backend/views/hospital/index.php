@@ -137,18 +137,22 @@ $this->registerJs("
                         'filter' => User::admin_statuses(),
                         'format'=>'raw',
                         'value' => function ($data) {
-                            $adminStatus =  User::admin_statuses();
-                            $html='';
-                            $html.='<select class="form-control status_update" data-id='.$data->id.'>';
-                            foreach($adminStatus as $adkey=> $adminst){
-                                if($adkey == $data->admin_status){
-                                    $html.='<option value='.$adkey.' selected>'.$adminst.'</option>';
-                                }
-                                else{
-                                    $html.='<option value='.$adkey.'>'.$adminst.'</option>';
+                            $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+                            $adminStatus = User::admin_statuses();
+                            if(isset($current_user_roles['manager'])){
+                                $html = $data->admin_status;
+                            }else{
+                            $html = '';
+                            $html .= '<select class="form-control status_update" data-id=' . $data->id . '>';
+                            foreach ($adminStatus as $adkey => $adminst) {
+                                if ($adkey == $data->admin_status) {
+                                    $html .= '<option value=' . $adkey . ' selected>' . $adminst . '</option>';
+                                } else {
+                                    $html .= '<option value=' . $adkey . '>' . $adminst . '</option>';
                                 }
                             }
-                            $html.='</select>';
+                            $html .= '</select>';
+                            }
                             return $html;
                         },
                     ],

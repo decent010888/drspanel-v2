@@ -19,6 +19,7 @@ $baseUrl = Yii::getAlias('@backendUrl');
 $model_name = "'User'";
 $type = Groups::GROUP_DOCTOR;
 
+
 $this->registerJs("
     $('select#doctorsearch-admin_status').change(function(){
        $('.form-group button.submit').click();
@@ -191,8 +192,13 @@ $this->registerJs("
                         'filter' => User::plan_statuses(),
                         'content' => function ($data) {
                             $adminStatus = User::plan_statuses();
-
+                            $currentuser = User::find()->where(['id' => Yii::$app->user->id])->one();
+                            $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+                            if($currentuser->username == 'manager2' || $currentuser->username == 'webmaster'){
                             $link = Html::a($adminStatus[$data->user_plan], 'javascript:void(0)', ['onclick' => "return modal_plan_actions($data->id);", 'aria-label' => 'Edit', 'title' => 'Edit']);
+                            }else{
+                                $link = Html::a($adminStatus[$data->user_plan], 'javascript:void(0)', ['aria-label' => 'Edit', 'title' => 'Edit']);
+                            }
                             return $link;
                         }
                     ],

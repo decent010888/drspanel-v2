@@ -52,9 +52,9 @@ class HospitalSearch extends User
         ]);
         $query->joinWith(['userProfile']);
         $query->andWhere(['user_profile.groupid' => Groups::GROUP_HOSPITAL]);
-        if($logined->role=='SubAdmin'){
-            $query->andWhere(['user.admin_user_id' => $logined->id]);
-        }
+        //if($logined->role=='SubAdmin'){
+            //$query->andWhere(['user.admin_user_id' => $logined->id]);
+        //}
 
         $dataProvider->setSort([
             'attributes' => [

@@ -4964,7 +4964,49 @@ class ApiDrspanelController extends ActiveController {
         } else {
             $response["status"] = 0;
             $response["error"] = true;
-            $response["message"] = 'Callback failed';
+            $response["message"] = 'hospital id required';
+            $response["data"] = [];
+            Yii::$app->response->statusCode = 201;
+            Yii::info($response, __METHOD__);
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            return $response;
+        }
+    }
+
+    public function actionPaytmFailure() {
+        $response = $data = $required = array();
+        $params = Yii::$app->request->queryParams;
+        Yii::info($params, __METHOD__);
+        if (isset($params['appointment_id']) && $params['appointment_id'] != '' && isset($params['status']) && $params['status'] != '') {
+            $appointment = UserAppointmentTemp::find()->where(['id' => $params['appointment_id']])->one();
+            $appointment->payment_status = UserAppointment::PAYMENT_PENDING;
+            if ($appointment->save()) {
+
+                $schedule_id = $appointment->schedule_id;
+                $slot_id = $appointment->slot_id;
+                $slot = UserScheduleSlots::find()->where(['id' => $slot_id, 'schedule_id' => $schedule_id])->one();
+                $slot->status = 'available';
+                $slot->save();
+
+                $transaction = Transaction::find()->where(['temp_appointment_id' => $appointment_id])->one();
+                $transaction->status = 'failed';
+                $transaction->paytm_response = json_encode($data);
+                if ($transaction->save()) {
+                    $addLog = Logs::transactionLog($transaction->id, 'Transaction failed');
+                }
+                $response["status"] = 0;
+                $response["error"] = true;
+                $response["message"] = 'failed';
+                $response["data"] = [];
+                Yii::$app->response->statusCode = 201;
+                Yii::info($response, __METHOD__);
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                return $response;
+            }
+        } else {
+            $response["status"] = 0;
+            $response["error"] = true;
+            $response["message"] = 'failed';
             $response["data"] = [];
             Yii::$app->response->statusCode = 201;
             Yii::info($response, __METHOD__);
@@ -5633,7 +5675,7 @@ class ApiDrspanelController extends ActiveController {
                 if ($user->groupid == Groups::GROUP_HOSPITAL) {
                     $user = User::findOne($params['user_id']);
                     $profile = UserProfile::findOne(['user_id' => $user->id]);
-                    $response['profile'] = DrsPanel::profiledetails($user, $profile, $user->groupid);
+                    $response['profile'] = DrsPanel::profiledetails($user, $profile, $user->groupid, $params['user_id']);
                 } else {
                     $response['profile'] = DrsPanel::hospitalProfile($params['user_id']);
                 }

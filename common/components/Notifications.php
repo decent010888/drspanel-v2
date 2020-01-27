@@ -126,7 +126,7 @@ class Notifications {
                 $token = $user->token;
                 $appointment_time = date('h:i a', $appointment->appointment_time);
 
-                $message = 'Dear ' . $appointment->user_name . ' your shift with ' . $appointment->doctor_name . ' token no ' . $token . ' today at ' . $appointment_time . ' has been started. PLS reach the place before 15 minutes of your time.';
+                $message = 'Dear ' . $appointment->user_name . ' your shift with ' . $appointment->doctor_name . ' token no ' . $token . ' today at ' . $appointment_time . ' has been started. Please reach before 15 minutes of your time.';
                 
                 //$message = 'Your doctor ' . $appointment->doctor_name . ' started the shift ' . $appointment_time;
                 $notification_data = ['type' => 'shift_status', 'message' => $message, 'user_id' => $user->id, 'appointment_id' => $appointment->id];

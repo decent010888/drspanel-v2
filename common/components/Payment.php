@@ -140,6 +140,7 @@ class Payment {
                         
                     }
                 } elseif ($status == "TXN_FAILURE") {
+                    echo 'Yes'; die;
                     $appointment->payment_status = UserAppointment::PAYMENT_PENDING;
                     if ($appointment->save()) {
 

@@ -5,10 +5,14 @@ use backend\models\AddScheduleForm;
 use common\components\DrsPanel;
 use branchonline\lightbox\Lightbox;
 use common\models\UserServiceCharge;
+use common\models\User;
 
 $shifts = DrsPanel::getShiftListByAddress($doctor_id, $list['id']);
 $shifts2 = DrsPanel::getShiftListByAddress2($doctor_id, $list['id']);
 $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+$userStatus = User::find()->where(['id' => $doctor_id])->one();
+$currentuser = User::find()->where(['id' => Yii::$app->user->id])->one();
+
 ?>
 <style>
     .pace-icon i {
@@ -46,6 +50,7 @@ $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id
                 }
                 ?>
             </div>
+            <?php if($userStatus->admin_status != 'live_approved' && $currentuser->username == 'manager1' || $currentuser->username == 'manager2' || $currentuser->username == 'webmaster'){ ?>
             <div class="shift_edit_icon_main location pull-right ">
                 <a class="modal-call check_service" title="Add/Update Service Charge" href="javascript:void(0)" data-id="<?php echo $list['id']; ?>">
                     <i class="fa fa-rupee"></i>
@@ -55,7 +60,7 @@ $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id
                     <i class="fa fa-pencil"></i>
                 </a>
             </div>
-
+        <?php } ?>
             <?php
             foreach ($shifts as $shift) {
                 ?>

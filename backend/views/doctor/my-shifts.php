@@ -5,6 +5,7 @@ use kartik\date\DatePicker;
 use backend\models\AddScheduleForm;
 use common\components\DrsPanel;
 use kartik\select2\Select2;
+use common\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -39,7 +40,11 @@ $js="
     });
 ";
 $this->registerJs($js,\yii\web\VIEW::POS_END);
+
+$userStatus = User::find()->where(['id' => $doctor_id])->one();
 ?>
+
+
 <section class="mid-content-part">
     <div class="container">
             <div class="row">

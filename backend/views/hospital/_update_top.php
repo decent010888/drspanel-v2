@@ -1,5 +1,6 @@
 <?php
 use common\components\DrsPanel;
+$current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
 $listUrl="'education-list'";
 $eduForm="'education-form'";
 $explistUrl="'experience-list'";
@@ -69,6 +70,7 @@ $js="
 $this->registerJs($js,\yii\web\VIEW::POS_END); 
 ?>
 <div class="row">
+  <?php if(!isset($current_user_roles['manager'])){ ?>
     <div class="col-md-4 col-sm-8 col-xs-12">
         <div class="info-box">
               <span class="info-box-icon bg-aqua">
@@ -90,6 +92,7 @@ $this->registerJs($js,\yii\web\VIEW::POS_END);
             </div><!-- /.info-box-content -->
         </div><!-- /.info-box -->
     </div><!-- /.col -->
+     <?php  } ?>
     <div class="col-md-4 col-sm-8 col-xs-12 hide">
         <div class="info-box">
 
